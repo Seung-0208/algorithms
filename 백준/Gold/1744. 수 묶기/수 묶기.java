@@ -6,7 +6,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
         //수열의 모든 수는 단 한번만 묶거나, 아니면 묶지 않아야한다
         //주어진 수는 음수일 수 있다
-        //음수끼리 곱했을 때 양수가 된다는 성질을 고려하지 못함
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
