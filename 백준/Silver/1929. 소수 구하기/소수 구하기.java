@@ -11,7 +11,11 @@ public class Main{
             nums[i] = true;
         }
 
-        for(int i=2; i<=N; i++) {
+        /*
+        N의 제곱근까지만 탐색하는 이유 - N의 제곱근까지만 탐색해도 되는 이유
+        예를 들어 16의 범위까지의 소수를 구한다고 할 때 16 = 4*4인데 이는 16보다 작은 숫자는 항상 4의 약수를 갖게 된다는 뜻이므로!
+        */
+        for(int i=2; i<=Math.sqrt(N); i++) {
             if(nums[i]) {
                 int temp = 2;
                 int j = i * temp;
