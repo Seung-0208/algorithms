@@ -27,6 +27,7 @@ public class Main{
         for(int i=2; i<nums.length; i++) {
             if(nums[i]==1) { //i번째 값이 1이면 소수
                 long temp = i;
+                //이때 N^k와 B값이 아닌 N과 B/N^(k-1)을 비교 -> 이항정리
                 while((double)i <= (double)B/(double)temp) {
                     if((double)i >= (double)A/(double)temp) cnt++;
                     temp = temp*i;
