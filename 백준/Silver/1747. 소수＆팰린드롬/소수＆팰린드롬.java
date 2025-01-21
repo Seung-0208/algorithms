@@ -4,7 +4,7 @@ public class Main{
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
         int[] nums = new int[10000001];
-        for(int i=0; i<nums.length; i++) nums[i] = i;
+        for(int i=2; i<nums.length; i++) nums[i] = i;
         //소수 판정
         for(int i=2; i<Math.sqrt(nums.length); i++) {
             if(nums[i] != 0) {
@@ -35,7 +35,6 @@ public class Main{
             }
             N++;
         }
-        if(N==1) System.out.println(2);
-        else System.out.println(N);
+        System.out.println(N);
     }
 }
