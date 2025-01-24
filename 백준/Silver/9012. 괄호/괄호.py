@@ -1,19 +1,21 @@
-n = int(input())
+N = int(input())
 
-for i in range(n):
-    stack=[]
-    word = input()
-    for i in range(len(word)):
-        if word[i]=='(':
-            stack.append(word[i])
-        elif word[i]==')':
-            if stack:
-                stack.pop()
-            else:
-                print("NO")
-                break
-    else:
-        if not stack:
-            print("YES")
-        else:
-            print("NO")
+for _ in range(N):
+        is_true = True
+        string = input()
+        stk = []
+        for a in string:
+                if a == ')':
+                        if not stk:
+                                print("NO")
+                                is_true = False
+                                break
+                        else:
+                                stk.pop()
+                else:
+                        stk.append('(')
+        if is_true:
+                if stk:
+                        print("NO")
+                else:
+                        print("YES")
