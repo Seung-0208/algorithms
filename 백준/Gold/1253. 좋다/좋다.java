@@ -1,35 +1,40 @@
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.*;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class Main{
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
+        Scanner sc = new Scanner(System.in);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int N = sc.nextInt();
         long[] nums = new long[N];
-        st = new StringTokenizer(br.readLine());
-        for(int i=0; i<N; i++) nums[i] = Long.parseLong(st.nextToken());
-        Arrays.sort(nums); //0번
+        for(int i=0; i<N; i++) nums[i] = sc.nextLong();
+
+        Arrays.sort(nums);
+
         int cnt = 0;
-        for(int i=0; i<N; i++) { //1번
-            int s_pt = 0, e_pt = N-1;
+        for(int i=0; i<N; i++) {
             long cur = nums[i];
-            while(s_pt<e_pt) { //2번
-                long temp = nums[s_pt] + nums[e_pt];
-                if(cur > temp) s_pt++;
-                else if(cur < temp) e_pt--;
-                else { //만약 둘이 같다면
-                    if(s_pt != i && e_pt != i) {
+            int start = 0, end = N-1;
+            while(start < end) {
+                long tmp = nums[start] + nums[end];
+                if(cur > tmp) start++;
+                else if(cur < tmp) end--;
+                else {
+                    if(start != i && end != i) {
                         cnt++;
                         break;
-                    }
-                    else if(s_pt==i) s_pt++;
-                    if(e_pt==i) e_pt--;
+                    } 
+                    //start와 end가 모두 i인 경우가 있을 수 있으므로 else if가 아닌 if로 작성
+                    if(start==i) start++;
+                    if(end==i) end--;
                 }
             }
         }
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         bw.write(String.valueOf(cnt));
         bw.flush();
     }
