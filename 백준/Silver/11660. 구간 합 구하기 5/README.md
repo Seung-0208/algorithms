@@ -16,7 +16,7 @@
 
 ### 아이디어
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/a5f3c510-9524-4d89-9e13-3ef0246ccddf/4edd8fd7-bd97-4c63-abbc-98fbf1e153ad/Untitled.png)<br/>
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/a5f3c510-9524-4d89-9e13-3ef0246ccddf/4edd8fd7-bd97-4c63-abbc-98fbf1e153ad/Untitled.png)
 ![image](https://github.com/user-attachments/assets/4d82af34-2ec8-4f1b-bc15-24cfda6f1510)
 
 * 2차원 배열에서 구간합을 구하는 공식을 알아야 함
