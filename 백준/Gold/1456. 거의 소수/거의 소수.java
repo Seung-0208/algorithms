@@ -29,12 +29,21 @@ public class Main{
         int cnt = 0;
         for(int i=2; i<=10000000; i++) {
             if(isPrime[i] != 0) {
+                //이항정리 미사용
+                /*
                 int temp = 2;
                 long j = (long) Math.pow(i, temp);
                 while(j<=B) {
                     if(j>=A) cnt++;
                     temp++;
                     j = (long) Math.pow(i, temp);
+                }
+                 */
+                //이항정리 사용
+                long temp = i;
+                while((double) i <= (double)B/(double)temp) {
+                    if((double) i >= (double)A/(double)temp) cnt++;
+                    temp = temp*i;
                 }
             }
         }
