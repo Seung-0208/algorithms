@@ -1,30 +1,30 @@
+import java.io.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String exp = sc.nextLine();
-        String[] added = exp.split("-");
-        int[] subs = new int[added.length];
-        
-        for(int i=0; i<added.length; i++) {
-            StringBuilder tempStr = new StringBuilder();
-            int temp = 0;
-            for(int j=0; j<added[i].length(); j++) {
-                if(added[i].charAt(j) == '+') {
-                    temp += Integer.valueOf(tempStr.toString());
-                    tempStr = new StringBuilder();
-                    continue;
-                }
-                tempStr.append(added[i].substring(j, j + 1));
+public class Main{
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        String format = st.nextToken();
+        String[] pluses = format.split("-");
+        ArrayList<Integer> nums = new ArrayList<>();
+        for(String s : pluses) {
+            String[] tmpNums = s.split("\\+");
+            int sum = 0;
+            for(String sNum : tmpNums) {
+                sum += Integer.valueOf(sNum);
             }
-            temp += Integer.valueOf(tempStr.toString());
-            subs[i] = temp;
+            nums.add(sum);
         }
-        int ans = subs[0];
-        for(int i=1; i < subs.length; i++) {
-            ans -= subs[i];
+        int ret = nums.get(0);
+        for(int i=1; i<nums.size(); i++) {
+            ret -= nums.get(i);
         }
-        System.out.println(ans);
+        System.out.println(ret);
     }
+
 }
