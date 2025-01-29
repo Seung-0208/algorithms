@@ -1,33 +1,34 @@
+import java.io.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Main{
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int M = sc.nextInt();
-        int N = sc.nextInt();
-        boolean[] nums = new boolean[N+1];
 
-        for(int i=2; i<=N; i++) {
-            nums[i] = true;
-        }
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        /*
-        N의 제곱근까지만 탐색하는 이유 - N의 제곱근까지만 탐색해도 되는 이유
-        예를 들어 16의 범위까지의 소수를 구한다고 할 때 16 = 4*4인데 이는 16보다 작은 숫자는 항상 4의 약수를 갖게 된다는 뜻이므로!
-        */
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+
+        int[] isPrime = new int[N+1];
+        for(int i=2; i<N+1; i++) isPrime[i] = i;
         for(int i=2; i<=Math.sqrt(N); i++) {
-            if(nums[i]) {
+            if(isPrime[i] != 0) {
                 int temp = 2;
-                int j = i * temp;
-                while (j <= N) {
-                    nums[j] = false;
+                int j = i*temp;
+                while(j<=N) {
+                    isPrime[j] = 0;
                     temp++;
-                    j = i * temp;
+                    j = i*temp;
                 }
             }
         }
+
         for(int i=M; i<=N; i++) {
-            if(nums[i]) System.out.println(i);
+            if(isPrime[i] != 0) bw.write(String.valueOf(i)+"\n");
         }
+        bw.flush();
     }
 }
