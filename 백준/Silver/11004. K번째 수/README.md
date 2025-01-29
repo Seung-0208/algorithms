@@ -14,17 +14,11 @@
 
 2024년 9월 27일 03:27:11
 
-### 문제 설명
-
-<p>수 N개 A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>N</sub>이 주어진다. A를 오름차순 정렬했을 때, 앞에서부터 K번째 있는 수를 구하는 프로그램을 작성하시오.</p>
-
-### 입력 
-
- <p>첫째 줄에 N(1 ≤ N ≤ 5,000,000)과 K (1 ≤ K ≤ N)이 주어진다.</p>
-
-<p>둘째에는 A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>N</sub>이 주어진다. (-10<sup>9</sup> ≤ A<sub>i</sub> ≤ 10<sup>9</sup>)</p>
-
-### 출력 
-
- <p>A를 정렬했을 때, 앞에서부터 K번째 있는 수를 출력한다.</p>
+### 아이디어
+* Quick Sort 문제의 정석
+* 가운데에 있는 값을 pivot으로 잡고 pivot을 기준으로 왼쪽에는 작은 값, 오른쪽에는 큰 값으로 나열 => findPivot 함수
+* pivot의 위치가 K값과 같다면 K번째 값을 찾은 것이므로 값 반환 -> executeQuick함수
+* 구체적인 로직은 아래의 그림 참고
+  ![image](https://github.com/user-attachments/assets/e157d6f0-3694-4e7a-8274-a2066bfbca1f)
+ 
 
