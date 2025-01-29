@@ -32,12 +32,12 @@ public class Main{
             if(tmp[idx1] > tmp[idx2]) {
                 nums[k] = tmp[idx2];
                 cnt += idx2-k;
-                idx2++; k++;
+                idx2++;
             } else {
                 nums[k] = tmp[idx1];
                 idx1++;
-                k++;
             }
+            k++;
         }
         while(idx1 <= m) {
             nums[k] = tmp[idx1];
