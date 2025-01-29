@@ -29,7 +29,7 @@ public class Main{
         int cnt = 0;
         for(int i=2; i<=10000000; i++) {
             if(isPrime[i] != 0) {
-                //이항정리 미사용
+                //이항정리 미사용 -> 372ms
                 /*
                 int temp = 2;
                 long j = (long) Math.pow(i, temp);
@@ -39,7 +39,7 @@ public class Main{
                     j = (long) Math.pow(i, temp);
                 }
                  */
-                //이항정리 사용
+                //이항정리 사용 -> 352ms
                 long temp = i;
                 while((double) i <= (double)B/(double)temp) {
                     if((double) i >= (double)A/(double)temp) cnt++;
