@@ -1,44 +1,47 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
-public class Main {
-    static int[] A;
+public class Main{
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        //N값 받기
         StringTokenizer st = new StringTokenizer(br.readLine());
-        //N입력
         int N = Integer.parseInt(st.nextToken());
-        //배열 A입력
-        A = new int[N];
+
+        //수열 A 받기
         st = new StringTokenizer(br.readLine());
-        for(int i=0; i<N; i++) {
-            A[i] = Integer.parseInt(st.nextToken());
-        }
+        int[] A = new int[N];
+        for(int i=0; i<N; i++) A[i] = Integer.parseInt(st.nextToken());
         Arrays.sort(A);
-        //M입력
+
+        //M값 받기
         st = new StringTokenizer(br.readLine());
         int M = Integer.parseInt(st.nextToken());
-        //탐색 대상 입력
+
+        //테스트 값 받기
         st = new StringTokenizer(br.readLine());
         for(int i=0; i<M; i++) {
-            int temp = Integer.parseInt(st.nextToken());
-            binarySearch(temp);
+            int K = Integer.parseInt(st.nextToken());
+            if(isExist(A, K)) bw.write(String.valueOf(1)+"\n");
+            else bw.write(String.valueOf(0)+"\n");
         }
+        bw.flush();
     }
 
-    static void binarySearch(int target) {
-        int start = 0;
-        int end = A.length - 1;
-        while(start <= end) {
-            int middle = (start+end)/2;
-            if(A[middle] == target) {
-                System.out.println(1);
-                return;
-            }
-            else if(A[middle] < target) start = middle+1;
-            else end = middle-1;
+    //이진탐색
+    static boolean isExist(int[] A, int K) {
+
+        int s = 0;
+        int e = A.length - 1;
+        while(s<=e) {
+            int m = (s+e)/2;
+            if(A[m] == K) return true;
+            if(A[m] < K) s = m+1;
+            else e = m-1;
         }
-        System.out.println(0);
+        return false;
     }
 }
