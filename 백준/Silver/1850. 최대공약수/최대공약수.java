@@ -7,19 +7,29 @@ public class Main{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        
-        long a = Long.parseLong(st.nextToken());
-        long b = Long.parseLong(st.nextToken());
-        long ret = gcd(a,b);
-        while(ret > 0) {
+
+        long A = Long.parseLong(st.nextToken());
+        long B = Long.parseLong(st.nextToken());
+        long ret = gcd(A, B);
+        for(int i=0; i<ret; i++) {
             bw.write("1");
-            ret--;
         }
+        bw.newLine();
         bw.flush();
         bw.close();
     }
-    public static long gcd(long a, long b){
-        if(b==0) return a;
-        else return gcd(b, a%b);
+    static long gcd(long a, long b){
+        long bigger, smaller;
+        bigger = Math.max(a, b);
+        smaller = Math.min(a, b);
+
+        long rest = bigger % smaller;
+        while(rest != 0) {
+            bigger = smaller;
+            smaller = rest;
+            rest = bigger%smaller;
+        }
+        return smaller;
     }
+
 }
