@@ -63,8 +63,7 @@ public class Main{
 
         @Override
         public int compareTo(Node o) {
-            if(this.weight > o.weight) return 1;
-            else return -1;
+            return this.weight - o.weight;
         }
     }
 }
