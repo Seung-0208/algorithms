@@ -8,8 +8,8 @@ public class Main{
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken()); //문자열의 개수 N(S)
-        int M = Integer.parseInt(st.nextToken()); //문자열의 개수 M
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
         Node root = new Node();
         for(int i=0; i<N; i++) {
@@ -17,33 +17,35 @@ public class Main{
             String tmp = st.nextToken();
             Node now = root;
             for(int j=0; j<tmp.length(); j++) {
-                char c = tmp.charAt(j);
-                if(now.children[c-'a'] == null) {
-                    now.children[c-'a'] = new Node();
+                char t = tmp.charAt(j);
+                if(now.children[t-'a'] == null) {
+                    now.children[t-'a'] = new Node();
                 }
-                now = now.children[c-'a'];
+                now = now.children[t-'a'];
                 if(j == tmp.length()-1) now.isLeaf = true;
             }
         }
-
         int cnt = 0;
         for(int i=0; i<M; i++) {
             st = new StringTokenizer(br.readLine());
             String tmp = st.nextToken();
             Node now = root;
             for(int j=0; j<tmp.length(); j++) {
-                char c = tmp.charAt(j);
-                if(now.children[c-'a'] == null) break;
-                now = now.children[c-'a'];
-                if(j == tmp.length()-1 && now.isLeaf) cnt++;
+                char t = tmp.charAt(j);
+                if(now.children[t-'a'] == null) break;
+                now = now.children[t-'a'];
+                if(j==tmp.length()-1 && now.isLeaf) cnt++;
             }
         }
+
         bw.write(cnt+"\n");
         bw.flush();
+
     }
 
-    static class Node {
+    static class Node{
         Node[] children = new Node[26];
         boolean isLeaf;
     }
+
 }
