@@ -11,29 +11,25 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+        String[] size = br.readLine().split(" ");
+        int n = Integer.parseInt(size[0]);
+        int m = Integer.parseInt(size[1]);
         int[][] D = new int[n+1][m+1];
 
         int ret = 0;
+
         for(int i=1; i<=n; i++) {
-            st = new StringTokenizer(br.readLine());
-            String line = st.nextToken();
-            for(int j=1; j<=m; j++) {
-                D[i][j] = Integer.parseInt(String.valueOf(line.charAt(j-1)));
-                if(D[i][j] != 0) {
-                    D[i][j] = Math.min(D[i-1][j], D[i][j-1]);
-                    D[i][j] = Math.min(D[i][j], D[i-1][j-1]);
-                    D[i][j]++;
-                    ret = Math.max(D[i][j], ret);
+            String line = br.readLine();
+            for(int j=1 ;j<=m; j++) {
+                if(line.charAt(j-1) == '1') {
+                    D[i][j] = Math.min(Math.min(D[i-1][j], D[i][j-1]), D[i-1][j-1]) + 1;
+                    ret = Math.max(ret, D[i][j]);
                 }
             }
         }
 
-        bw.write(ret*ret+"\n");
-
-
+        bw.write(String.valueOf(ret*ret));
+        bw.newLine();
         bw.flush();
         bw.close();
         br.close();
