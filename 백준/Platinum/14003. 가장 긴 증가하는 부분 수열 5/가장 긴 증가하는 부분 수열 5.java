@@ -9,10 +9,10 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken()); //수열의 크기
-        int[] A = new int[N+1]; //수열 저장용
-        int[] D = new int[N+1]; //DP 계산용
-        B = new int[N+1]; //유리한 순열 계산용
+        int N = Integer.parseInt(st.nextToken()); //수열의 길이
+        int[] A = new int[N+1]; //수열
+        int[] D = new int[N+1]; //DP 계산용 수열
+        B = new int[N+1];
 
         st = new StringTokenizer(br.readLine());
         for(int i=1; i<=N; i++) {
@@ -20,41 +20,35 @@ public class Main {
         }
 
         int max = 0;
-        int index;
-        B[++max] = A[1];
-        D[1] = 1;
+        int index = 1;
+        D[++max] = 1;
+        B[1] = A[1];
 
         for(int i=2; i<=N; i++) {
-            if(B[max] < A[i]) {
+            if(A[i] > B[max]) {
                 B[++max] = A[i];
-                D[i] = max;
+                index = max;
             } else {
                 index = binarySearch(1, max, A[i]);
                 B[index] = A[i];
-                D[i] = index;
             }
+            D[i] = index;
         }
 
-        index = max;
-
         bw.write(max+"\n");
-        int x = B[max] + 1;
-        int[] ans = new int[N];
-        int idx = 0;
-        for(int i=N; i>0; i--){
-            if(D[i] == index && A[i] < x){
-                ans[idx] = A[i];
-                idx++;
-                index--;
+
+        int[] ans = new int[max+1];
+        int x =  B[max]+1;
+        for(int i=N; i>0; i--) {
+            if(D[i] == max && A[i] < x) {
+                ans[max] = A[i];
+                max--;
                 x = A[i];
             }
         }
-
-        for(int i=idx-1; i>=0; i--) {
-            bw.write(ans[i] + " ");
+        for(int i=1; i<ans.length; i++) {
+            bw.write(ans[i]+" ");
         }
-        bw.newLine();
-
 
 
         bw.flush();
@@ -64,14 +58,10 @@ public class Main {
 
     static int binarySearch(int s, int e, int now) {
         int m;
-        while (s < e) {
+        while(s < e) {
             m = (s+e)/2;
-            if(B[m] < now) {
-                s = m+1;
-            }
-            else {
-                e = m;
-            }
+            if(now > B[m]) s = m+1;
+            else e = m;
         }
         return s;
     }
