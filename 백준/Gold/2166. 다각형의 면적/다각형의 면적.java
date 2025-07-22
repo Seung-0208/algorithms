@@ -1,5 +1,6 @@
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Main {
@@ -28,6 +29,7 @@ public class Main {
             long CCW = points[i-1][0]*points[i][1] - points[i][0]*points[i-1][1];
             ans += CCW;
         }
+
 
         String ansString = String.format("%.1f", Math.abs(ans) / 2.0);
 
