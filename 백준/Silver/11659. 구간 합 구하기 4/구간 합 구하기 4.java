@@ -1,31 +1,34 @@
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+
+import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
 
-public class Main{
-    public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
+public class Main {
+
+    public static void main(String[] args) throws IOException{
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        int N = sc.nextInt();
-        int M = sc.nextInt();
-        int[] nums = new int[N+1];
-        int[] sums = new int[N+1];
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        //주어진 수 담기
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+
+        int[] sum = new int[N+1];
+        st = new StringTokenizer(br.readLine());
         for(int i=1; i<N+1; i++) {
-            nums[i] = sc.nextInt();
-            sums[i] = sums[i-1] + nums[i];
+            sum[i] = sum[i-1] + Integer.parseInt(st.nextToken());
         }
 
-        //합 출력하기
-        for(int k=0; k<M; k++) {
-            int i = sc.nextInt();
-            int j = sc.nextInt();
-            int temp = sums[j] - sums[i-1];
-            bw.write(String.valueOf(temp));
-            bw.newLine();
+        for(int i=0; i<M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+
+            bw.write((sum[b]-sum[a-1])+"\n");
         }
+
         bw.flush();
+        bw.close();
+        br.close();
     }
 }
