@@ -1,31 +1,51 @@
+
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
-public class Main{
-    public static void main(String[] args) throws IOException {
+public class Main {
+
+    public static void main(String[] args) throws IOException{
+
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        int N = Integer.parseInt(st.nextToken());
 
-        //cnt를 1부터 시작하는 것은, 연속된 자연수의 합으로 나타낼 때 N 자신의 수도 포함되기 때문
-        int start = 1, end = 1, sum = 1, cnt = 1;
-        while(end != N) {
-            if(sum == N) {
+        int N = Integer.parseInt(st.nextToken());
+        int s = 1, e = 2;
+
+        if(N==1) {
+            bw.write(1+"\n");
+            bw.flush();
+            bw.close();
+            br.close();
+            return;
+        }
+        int cnt = 1;
+        int sum = s+e;
+        while(s<e && e<=N){
+//            System.out.printf("s: %d, e: %d, sum: %d\n", s, e, sum);
+            if(sum > N) {
+                sum -= s;
+                s++;
+            }
+            else if(sum < N) {
+                e++;
+                sum += e;
+            }
+            else {
                 cnt++;
-                end++;
-                sum += end;
-            } else if(sum < N) {
-                end++;
-                sum += end;
-            } else {
-                sum -= start;
-                start++;
+                s++;
+                e++;
+                sum = sum - (s-1) + e;
             }
         }
-        bw.write(String.valueOf(cnt));
+
+        bw.write(cnt+"\n");
+
         bw.flush();
+        bw.close();
+        br.close();
     }
 }
