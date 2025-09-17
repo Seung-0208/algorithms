@@ -1,38 +1,58 @@
-import java.io.*;
-import java.util.*;
 
-public class Main{
+import java.io.*;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.LongStream;
+
+public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         int N = Integer.parseInt(st.nextToken());
-        int[] nums = new int[N];
-        int[] ans = new int[N];
+        int[] ret = new int[N];
+        Stack<Node> stack = new Stack<>();
+
         st = new StringTokenizer(br.readLine());
-        for(int i=0; i<N; i++) nums[i] = Integer.parseInt(st.nextToken());
-
-        //스택에는 인덱스 값을 기준으로 넣어줘야 한다
-        //인덱스 값을 기준으로 하지 않으면 값을 순서대로 출력할 수 없음
-        Stack<Integer> stack = new Stack<>();
-        int topIdx = 0;
-        while(topIdx <= N-1){
-            while(!stack.isEmpty() && nums[stack.peek()] < nums[topIdx]) {
-                int tmpIdx = stack.pop();
-                ans[tmpIdx] = nums[topIdx];
+        stack.add(new Node(Integer.parseInt(st.nextToken()), 0));
+        for(int i=1; i<N; i++) {
+            int t = Integer.parseInt(st.nextToken());
+            if(!stack.isEmpty()) {
+                int latest = stack.peek().value;
+                while(latest < t) {
+                    Node node = stack.pop();
+                    ret[node.idx] = t;
+                    if(!stack.isEmpty()) latest = stack.peek().value;
+                    else break;
+                }
             }
-            stack.push(topIdx);
-            topIdx++;
+            stack.add(new Node(t, i));
         }
 
-        //스택에 남아있는 값들은 오큰수가 없다는 뜻이므로 -1로 채워줌
         while(!stack.isEmpty()) {
-            ans[stack.pop()] = -1;
+            Node node = stack.pop();
+            ret[node.idx] = -1;
         }
 
-        for(int i=0; i<N; i++) bw.write(String.valueOf(ans[i])+" ");
+        for(int n : ret) {
+            bw.write(n + " ");
+        }
+
         bw.flush();
+        br.close();
+        bw.close();
+    }
+
+    static class Node {
+        int value;
+        int idx;
+
+        public Node(int value, int idx) {
+            this.value = value;
+            this.idx = idx;
+        }
     }
 
 }
