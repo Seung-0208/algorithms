@@ -35,6 +35,7 @@ public class Main{
         int pivot = arr[start];
         int i = start+1, j = end;
         while(i <= j) {
+            //⚠️여기서 pivot과 arr값을 비교 시 =을 추가하면 시간 초과 됨
             while(j >= start+1 && pivot < arr[j]) j--;
             while(i <= end && pivot > arr[i]) i++;
             if(i <= j) swap(arr, i++, j--);
@@ -50,3 +51,4 @@ public class Main{
         arr[b] = temp;
     }
 }
+
