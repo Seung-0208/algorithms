@@ -1,31 +1,40 @@
 import java.io.*;
 import java.util.*;
 
-public class Main{
+public class Main {
+
     static int N;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         N = Integer.parseInt(st.nextToken());
-        DFS(1,2);
-        DFS(1,3);
-        DFS(1,5);
-        DFS(1,7);
+
+        int[] odd = {2, 3, 5, 7};
+        for(int o : odd) {
+            DFS(1, o);
+        }
     }
-    public static void DFS(int pos, int num) {
-        if(pos == N) {
-            if(isPrime(num)) System.out.println(num);
+
+    static void DFS(int n, int number) {
+        if(n == N) {
+            System.out.println(number);
             return;
         }
-        for(int i=1; i<10; i++) {
-            if(i%2 == 0) continue;
-            if(isPrime(10*num + i)) DFS(pos+1, 10*num+i);
+        int currNum = number*10;
+        for(int i=0; i<10; i++) {
+            int temp = currNum + i;
+            if(isOdd(temp)) {
+                DFS(n+1, temp);
+            }
         }
     }
-    public static boolean isPrime(int num) {
-        for(int i=2; i<num/2; i++) {
-            if(num%i == 0) return false;
+
+    static boolean isOdd(int n) {
+        for(int i=2; i<=n/2; i++) {
+            if(n % i == 0) return false;
         }
         return true;
     }
-}
+};
