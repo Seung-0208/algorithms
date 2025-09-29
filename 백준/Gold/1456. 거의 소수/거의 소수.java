@@ -1,53 +1,51 @@
 import java.io.*;
 import java.util.*;
-import java.util.stream.IntStream;
 
-public class Main{
-
-    public static void main(String[] args) throws IOException {
+public class Main {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
+        BufferedWriter bw= new BufferedWriter(new OutputStreamWriter(System.out));
+
         long A = Long.parseLong(st.nextToken());
         long B = Long.parseLong(st.nextToken());
+        int MAX_VALUE = 10000001;
 
-        //소수 판정
-        int[] isPrime = new int[10000001];
-        for(int i=2; i<=10000000; i++) isPrime[i] = i;
-        for(int i=2; i<Math.sqrt(10000000); i++) {
-            if(isPrime[i] != 0) {
-                int temp = 2;
-                int j = i*temp;
-                while(j<=10000000) {
-                    isPrime[j] = 0;
-                    temp++;
-                    j = i*temp;
+        boolean[] isDeleted = new boolean[10000001];
+        List<Integer> prior = new ArrayList<>();
+        isDeleted[1] = true;
+
+        for(int i=4; i<=MAX_VALUE; i+=2) {
+            isDeleted[i] = true;
+        }
+
+        for(int i=6; i<=MAX_VALUE; i+=3) {
+            isDeleted[i] = true;
+        }
+
+        prior.add(2);
+        prior.add(3);
+
+        for(int i=5; i<MAX_VALUE; i++) {
+            if(!isDeleted[i]) {
+                prior.add(i);
+                for(int j=i*2; j<MAX_VALUE; j+=i) {
+                    isDeleted[j] = true;
                 }
             }
         }
-        int cnt = 0;
-        for(int i=2; i<=10000000; i++) {
-            if(isPrime[i] != 0) {
-                //이항정리 미사용 -> 372ms
-                /*
-                int temp = 2;
-                long j = (long) Math.pow(i, temp);
-                while(j<=B) {
-                    if(j>=A) cnt++;
-                    temp++;
-                    j = (long) Math.pow(i, temp);
-                }
-                 */
-                //이항정리 사용 -> 352ms
-                long temp = i;
-                while((double) i <= (double)B/(double)temp) {
-                    if((double) i >= (double)A/(double)temp) cnt++;
-                    temp = temp*i;
-                }
+
+        long cnt = 0;
+        for(int i : prior) {
+            for(double j = i; j <= (double) B /i; j*=i) {
+                if(j >= (double) A /i) cnt++;
             }
         }
-        bw.write(String.valueOf(cnt));
+
+        bw.write(cnt+"\n");
+
         bw.flush();
+        bw.close();
+        br.close();
     }
 }
