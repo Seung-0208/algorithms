@@ -21,19 +21,16 @@ public class Main {
 
     static void postOrder(int l, int r) {
         if(l > r) return;
+
         int root = order.get(l);
         int idx = l+1;
 
-        //오른쪽 서브트리의 시작점
-        while(idx <= r && order.get(idx) < root) {
+        while(idx <= r && root > order.get(idx)) {
             idx++;
         }
 
-        //왼쪽 서브트리
         postOrder(l+1, idx-1);
-        //오른쪽 서브트리
         postOrder(idx, r);
-        //루트
         sb.append(root).append("\n");
     }
 }
