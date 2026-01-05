@@ -1,62 +1,58 @@
-
 import java.io.*;
 import java.util.*;
 
 public class Main {
     static String tmp = "";
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    static int[][] tree;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
-        // 첫 줄: 숫자 7
-        int n = Integer.parseInt(scanner.nextLine());
-        int[][] tree = new int[2][n+1];
+        int N = Integer.parseInt(st.nextToken());
+        tree = new int[N+1][2];
 
-        // 다음 n줄: 문자열 3개씩 읽기
-        for (int i = 0; i < n; i++) {
-            String line = scanner.nextLine(); // 한 줄 전체 읽기
-            char[] part = line.toCharArray();
-            char parent = part[0];
-            char left = part[2];
-            char right = part[4];
-            if(left-'A'+1 >= 0) tree[0][parent-'A'+1] = left-'A'+1;
-            if(right-'A'+1 >= 0) tree[1][parent-'A'+1] = right-'A'+1;
+        for(int i=0; i<N; i++) {
+            st = new StringTokenizer(br.readLine());
+            int root = st.nextToken().charAt(0) - 'A' + 1;
+            int left = st.nextToken().charAt(0) - 'A' + 1;
+            if(left >= 0) tree[root][0] = left;
+            int right = st.nextToken().charAt(0) - 'A' + 1;
+            if(right >= 0) tree[root][1] = right;
         }
 
-        preorder(tree, 1);
-        System.out.println(tmp);
-
+        preorder(1);
+        sb.append(tmp).append("\n");
         tmp = "";
-        inorder(tree, 1);
-        System.out.println(tmp);
-
+        inorder(1);
+        sb.append(tmp).append("\n");
         tmp = "";
-        postorder(tree, 1);
-        System.out.println(tmp);
+        postorder(1);
+        sb.append(tmp);
 
+        System.out.println(sb);
+        br.close();
 
-        scanner.close();
     }
 
-    static void preorder(int[][] tree, int root) {
-        if (root == 0) return;
-        tmp += String.valueOf((char) (root + 'A' - 1));
-        preorder(tree, tree[0][root]);
-        preorder(tree, tree[1][root]);
-    }
-
-    static void inorder(int[][] tree, int root) {
-        if (root == 0) return;
-        inorder(tree, tree[0][root]);
-        tmp += String.valueOf((char) (root + 'A' - 1));
-        inorder(tree, tree[1][root]);
-    }
-
-    static void postorder(int[][] tree, int root) {
+    static void preorder(int root) {
         if(root == 0) return;
-        postorder(tree, tree[0][root]);
-        postorder(tree, tree[1][root]);
-        tmp += String.valueOf((char) (root+'A'-1));
+        tmp += String.valueOf((char)(root+'A'-1));
+        preorder(tree[root][0]);
+        preorder(tree[root][1]);
     }
 
+    static void inorder(int root) {
+        if(root == 0) return;
+        inorder(tree[root][0]);
+        tmp += String.valueOf((char)(root+'A'-1));
+        inorder(tree[root][1]);
+    }
 
+    static void postorder(int root) {
+        if(root == 0) return;
+        postorder(tree[root][0]);
+        postorder(tree[root][1]);
+        tmp += String.valueOf((char)(root+'A'-1));
+    }
 }
