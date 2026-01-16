@@ -1,47 +1,51 @@
+
 import java.io.*;
 import java.util.*;
 
-public class Main{
-
+public class Main {
+    static int[] arr;
+    static int N;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-        //N값 받기
+        N = Integer.parseInt(br.readLine()); //배열의 개수
+        arr = new int[N];
+
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
+        for(int i=0; i<N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+        }
 
-        //수열 A 받기
-        st = new StringTokenizer(br.readLine());
-        int[] A = new int[N];
-        for(int i=0; i<N; i++) A[i] = Integer.parseInt(st.nextToken());
-        Arrays.sort(A);
+        Arrays.sort(arr);
 
-        //M값 받기
-        st = new StringTokenizer(br.readLine());
-        int M = Integer.parseInt(st.nextToken());
-
-        //테스트 값 받기
+        int M = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
         for(int i=0; i<M; i++) {
-            int K = Integer.parseInt(st.nextToken());
-            if(isExist(A, K)) bw.write(String.valueOf(1)+"\n");
-            else bw.write(String.valueOf(0)+"\n");
+            int t = Integer.parseInt(st.nextToken());
+            int ans = binarySearch(t);
+            sb.append(ans).append("\n");
         }
-        bw.flush();
+
+        System.out.println(sb);
+        br.close();
     }
 
-    //이진탐색
-    static boolean isExist(int[] A, int K) {
+    static int binarySearch(int target) {
+        int start = 0;
+        int end = N-1;
 
-        int s = 0;
-        int e = A.length - 1;
-        while(s<=e) {
-            int m = (s+e)/2;
-            if(A[m] == K) return true;
-            if(A[m] < K) s = m+1;
-            else e = m-1;
+        while(start <= end) {
+            int mIdx = (start+end)/2;
+            int middle = arr[mIdx];
+
+            if(target == middle) return 1;
+            if(target < middle) {
+                end = mIdx-1;
+            } else {
+                start = mIdx+1;
+            }
         }
-        return false;
+        return 0;
     }
 }
