@@ -1,65 +1,61 @@
-
 import java.io.*;
 import java.util.*;
 
 public class Main {
-
+    static int[] arr;
+    static int[] copy;
     static int N;
-    static int[] nums;
-    static int[] temp;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
-        N = Integer.parseInt(st.nextToken());
-        nums = new int[N];
-        temp = new int[N];
-        for(int i=0; i<N; i++) {
-            st = new StringTokenizer(br.readLine());
-            nums[i] = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(br.readLine()); //배열의 개수
+        arr = new int[N];
+        copy = new int[N];
+
+        for(int i=0; i<N; i++) arr[i] = Integer.parseInt(br.readLine());
+
+        mergeNSort(0, N-1);
+
+        for(int n : arr) {
+            sb.append(n).append("\n");
         }
 
-        mergeSort(0, N-1);
-        for(int i=0; i<N; i++) {
-            bw.write(nums[i]+"\n");
-        }
 
-        bw.flush();
-        bw.close();
+        System.out.println(sb);
         br.close();
     }
 
-    static void mergeSort(int s, int e) {
-        if(s >= e) return;
-        int m = (s+e)/2;
-        mergeSort(s, m);
-        mergeSort(m+1, e);
+    static void mergeNSort(int start, int end) {
+        if(start >= end) return;
+        int m = (start+end)/2;
 
-        for(int i=s; i<=e; i++) temp[i] = nums[i];
+        mergeNSort(start, m);
+        mergeNSort(m+1, end);
 
-        int idx1 = s, idx2 = m+1, k = s;
-        while(idx1 <= m && idx2 <= e) {
-            if(temp[idx1] < temp[idx2]) {
-                nums[k] = temp[idx1];
-                idx1++;
-            } else {
-                nums[k] = temp[idx2];
-                idx2++;
+        System.arraycopy(arr, start, copy, start, end-start+1);
+
+        int i = start, j = m+1, now = start;
+        while(i <= m && j <= end) {
+            if(copy[i] < copy[j]) {
+                arr[now] = copy[i];
+                i++;
             }
-            k++;
+            else {
+                arr[now] = copy[j];
+                j++;
+            }
+            now++;
         }
 
-        while(idx1 <= m) {
-            nums[k] = temp[idx1];
-            idx1++;
-            k++;
+        while(i < m+1) {
+            arr[now] = copy[i];
+            i++; now++;
         }
-        while(idx2 <= e) {
-            nums[k] = temp[idx2];
-            idx2++;
-            k++;
+
+        while(j < end+1) {
+            arr[now] = copy[j];
+            j++; now++;
         }
     }
 }
