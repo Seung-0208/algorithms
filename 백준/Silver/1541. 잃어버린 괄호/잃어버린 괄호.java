@@ -1,30 +1,32 @@
+
 import java.io.*;
 import java.util.*;
-import java.util.stream.IntStream;
 
-public class Main{
-
+public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        String format = st.nextToken();
-        String[] pluses = format.split("-");
-        ArrayList<Integer> nums = new ArrayList<>();
-        for(String s : pluses) {
-            String[] tmpNums = s.split("\\+");
+        String line = br.readLine();
+        String[] token = line.split("-");
+
+        ArrayList<Integer> items = new ArrayList<>();
+
+        for(String l : token) {
             int sum = 0;
-            for(String sNum : tmpNums) {
-                sum += Integer.valueOf(sNum);
+            for(String sNum : l.split("\\+")) {
+                sum += Integer.parseInt(sNum);
             }
-            nums.add(sum);
+            items.add(sum);
         }
-        int ret = nums.get(0);
-        for(int i=1; i<nums.size(); i++) {
-            ret -= nums.get(i);
-        }
-        System.out.println(ret);
+
+        int total = items.get(0);
+        for(int i=1; i<items.size(); i++) total -= items.get(i);
+
+        sb.append(total);
+
+        System.out.println(sb);
+        br.close();
     }
 
 }
