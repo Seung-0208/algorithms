@@ -1,37 +1,48 @@
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.LongStream;
 
 public class Main {
-
-    public static void main(String[] args) throws IOException{
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
+        StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
-        long[] haps = new long[N+1];
         int M = Integer.parseInt(st.nextToken());
+        int[] d = new int[N];
+        long[] sum = new long[N];
 
         st = new StringTokenizer(br.readLine());
+        for(int i=0; i<N; i++) {
+            d[i] = Integer.parseInt(st.nextToken());
+            if(i==0) sum[0] = d[0];
+            if(i > 0) {
+                sum[i] = sum[i-1] + d[i];
+            }
+        }
 
-        for(int i=1; i<=N; i++)
-            haps[i] = Integer.parseInt(st.nextToken()) + haps[i-1];
+        for(int i=0; i<N; i++) {
+            sum[i] = sum[i] % M;
+        }
 
-        long[] moded = LongStream.of(haps).map(e -> e%M).toArray();
 
         long ans = 0;
         for(int i=0; i<M; i++) {
-            int temp = i;
-            long cnt = LongStream.of(moded).filter(e->e==temp).count();
-            ans += cnt*(cnt-1)/2;
+            long cnt = count(sum, i);
+            ans += (cnt*(cnt-1))/2;
+            if(i==0) ans += cnt;
         }
-
-        bw.write(ans+"\n");
-        bw.flush();
-        bw.close();
+        sb.append(ans);
+        System.out.println(sb);
         br.close();
+    }
+
+    static int count(long[] arr, int target) {
+        int cnt = 0;
+        for(long t : arr) {
+            if(target == t) cnt++;
+        }
+        return cnt;
     }
 }
