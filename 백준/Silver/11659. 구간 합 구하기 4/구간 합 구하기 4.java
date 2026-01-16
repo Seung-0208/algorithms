@@ -1,34 +1,36 @@
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.*;
 
 public class Main {
-
-    public static void main(String[] args) throws IOException{
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
+        StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
+        int[] d = new int[N];
+        int[] sum = new int[N];
 
-        int[] sum = new int[N+1];
         st = new StringTokenizer(br.readLine());
-        for(int i=1; i<N+1; i++) {
-            sum[i] = sum[i-1] + Integer.parseInt(st.nextToken());
+        for(int i=0; i<N; i++) {
+            d[i] = Integer.parseInt(st.nextToken());
+            if(i==0) sum[0] = d[0];
+            if(i > 0) {
+                sum[i] = sum[i-1] + d[i];
+            }
         }
-
+        
         for(int i=0; i<M; i++) {
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-
-            bw.write((sum[b]-sum[a-1])+"\n");
+            int s = Integer.parseInt(st.nextToken()) - 1;
+            int e = Integer.parseInt(st.nextToken()) - 1;
+            if(s == 0) sb.append(sum[e]).append("\n");
+            else sb.append(sum[e]-sum[s-1]).append("\n");
         }
 
-        bw.flush();
-        bw.close();
+        System.out.println(sb);
         br.close();
     }
 }
