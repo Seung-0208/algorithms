@@ -1,64 +1,75 @@
+
 import java.io.*;
 import java.util.*;
 
 public class Main {
-    static long[] tree;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         int N = Integer.parseInt(st.nextToken()); //수의 개수
-        int M = Integer.parseInt(st.nextToken()); //수의 변경 횟수
+        int M = Integer.parseInt(st.nextToken()); //수 변경 횟수
         int K = Integer.parseInt(st.nextToken()); //구간의 합 횟수
 
-        int leafStartIdx = 1;
-        while(leafStartIdx < N) {
-            leafStartIdx *= 2;
+        int temp = 1;
+        int k = 0;
+        while(temp < N) {
+            temp *= 2;
+            k++;
         }
-        int treeSize = leafStartIdx * 2;
-        tree = new long[treeSize];
 
-        // 트리 초기화
+        long[] tree = new long[temp*2];
         for(int i=0; i<N; i++) {
-            st = new StringTokenizer(br.readLine());
-            tree[i+leafStartIdx] = Long.parseLong(st.nextToken());
+            tree[temp+i] = Long.parseLong(br.readLine());
         }
-        for(int i=leafStartIdx-1; i>0; i--) {
-            tree[i] = tree[i*2] + tree[i*2+1];
+
+
+        for(int i=temp-1; i>=1; i--) {
+            tree[i] = tree[i*2]+tree[i*2+1];
         }
+
 
         for(int i=0; i<M+K; i++) {
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
-            if(a==1) {
+            if(a == 1) { //수를 변경
                 long c = Long.parseLong(st.nextToken());
-                b += (leafStartIdx-1);
-                tree[b] = c;
-                while(true) {
-                    b /= 2;
-                    if(b==0) break;
-                    tree[b] = tree[b*2] + tree[b*2+1];
-                }
-            }
-            if(a==2) {
+                changeValue(tree, b+temp-1, c);
+            } else { //실제 계산
                 int c = Integer.parseInt(st.nextToken());
-                int start = b + (leafStartIdx-1);
-                int end = c + (leafStartIdx-1);
-                long total = 0;
-
-                while(start <= end) {
-                    if(start % 2 == 1) total += tree[start];
-                    if(end % 2 == 0) total += tree[end];
-                    start = (start+1)/2;
-                    end = (end-1)/2;
-                }
-
-                sb.append(total).append("\n");
+                long t = calculate(b+temp-1, c+temp-1, tree);
+                sb.append(t).append("\n");
             }
         }
+
         System.out.println(sb);
         br.close();
+    }
+
+    static void changeValue(long[] tree, int index, long newNum) {
+        //index 는 트리 기준 index
+        tree[index] = newNum;
+        while(index > 0 && index/2 >0) {
+            index = index/2;
+            tree[index] = tree[index*2]+tree[index*2+1];
+        }
+    }
+
+    static long calculate(int s, int e, long[] tree) {
+        //s, e 는 트리 기준 인덱스
+        long sum = 0;
+        while(s<=e) {
+            if(s%2==1) {
+                sum += tree[s];
+            }
+            if(e%2==0) {
+                sum += tree[e];
+            }
+            s = (s+1)/2;
+            e = (e-1)/2;
+        }
+        return sum;
     }
 }
