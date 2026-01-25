@@ -1,34 +1,39 @@
 class Solution {
-    boolean[] colVisited;
-    boolean[] plusDiagonal;
-    boolean[] minusDiagonal;
-    int ans = 0;
+    boolean[] isColVisited;
+    boolean[] isPlusDiagVisited;
+    boolean[] isMinusDiagVisited;
+    int cnt = 0;
+    
     public int solution(int n) {
+        isColVisited = new boolean[n];
+        isPlusDiagVisited = new boolean[n*2+1];
+        isMinusDiagVisited = new boolean[n*2+1];
+        tracking(0, n);
         
-        colVisited = new boolean[n];
-        plusDiagonal = new boolean[(n-1)*2+1];
-        minusDiagonal = new boolean[(n-1)*2+1];
-        
-        tracking(n, 0);
-        return ans;
+        return cnt;
     }
     
-    void tracking(int n, int row) {
-        if(row == n) {
-            ans++;
+    void tracking(int row, int n) {
+        if(n==row) {
+            cnt++;
             return;
-        } 
+        }
         
-        for(int j=0; j<n; j++) {
-            int gap = (row-j) < 0 ? (row-j)*(-1)+(n-1) : (row-j);
-            if(!colVisited[j] && !plusDiagonal[row+j] && !minusDiagonal[gap]) {
-                colVisited[j] = true;
-                plusDiagonal[row+j] = true;
-                minusDiagonal[gap] = true;
-                tracking(n, row+1);
-                colVisited[j] = false;
-                plusDiagonal[row+j] = false;
-                minusDiagonal[gap] = false;
+        for(int i=0; i<n; i++) {
+            int gap = row-i;
+            
+            //-1 -2 -3
+            if(gap < 0) gap = n*2+1+gap;
+            if(!isColVisited[i] && !isPlusDiagVisited[i+row] && !isMinusDiagVisited[gap]) {
+                isColVisited[i] = true;
+                isPlusDiagVisited[i+row] = true;
+                isMinusDiagVisited[gap] = true;
+                
+                tracking(row+1, n);
+                
+                isColVisited[i] = false;
+                isPlusDiagVisited[i+row] = false;
+                isMinusDiagVisited[gap] = false;
             }
         }
     }
