@@ -1,44 +1,55 @@
 import java.util.*;
 
 class Solution {
-    ArrayList<Integer>[] banned_id_list;
-    HashSet<Integer> result = new HashSet<>();
+    ArrayList<Integer>[] matchPattern;
+    Set<Integer> cases = new HashSet<>();
     public int solution(String[] user_id, String[] banned_id) {
-        //패턴 매칭 확인
-        banned_id_list = new ArrayList[banned_id.length];
+        matchPattern = new ArrayList[banned_id.length];
         for(int i=0; i<banned_id.length; i++) {
-            banned_id_list[i] = new ArrayList<>();
-            for(int j=0; j<user_id.length; j++) {
-                if(patternMatching(banned_id[i], user_id[j])) {
-                    banned_id_list[i].add(j);
-                }
-            }
+            matchPattern[i] = new ArrayList<>();
         }
-                    
-        tracking(0, 0);
-        return result.size();
+        caculatePattern(user_id, banned_id);
+        DFS(0, 0, banned_id, user_id);
+        return cases.size();
     }
     
-    void tracking(int idx, int mask) {
-        if(idx == banned_id_list.length) {
-            result.add(mask);
+    void DFS(int idx, int isUsed, String[] banned_id, String[] user_id) {
+        if(idx == banned_id.length) {
+            cases.add(isUsed);
             return;
         }
         
-        for(int i : banned_id_list[idx]) {
-            if((mask & 1 << i) == 0) {
-                tracking(idx+1, mask | (1 << i));
+        String pattern = banned_id[idx];
+        for(int user : matchPattern[idx]) {
+            int temp = 1 << user;
+            if((temp & isUsed) == 0) {
+                
+                DFS(idx+1, temp | isUsed, banned_id, user_id);
             }
         }
     }
     
-    boolean patternMatching(String pattern, String userId) {
-        if(pattern.length() != userId.length()) return false;
-        char[] p = pattern.toCharArray();
-        char[] u = userId.toCharArray();
-        for(int i=0; i<u.length; i++) {
-            if(p[i] != '*' && p[i] != u[i]) return false;
+    void caculatePattern(String[] user_id, String[] banned_id) {
+        for(int i=0; i<banned_id.length; i++) {
+            String pattern = banned_id[i];
+            int idx = 0;
+            for(String id : user_id) {
+                if(pattern.length() == id.length()) {
+                    char[] patternArr = pattern.toCharArray();
+                    char[] idArr = id.toCharArray();
+                    boolean isMatch = true;
+                    for(int j=0; j<idArr.length; j++) {
+                        if(patternArr[j] != '*' && patternArr[j] != idArr[j]) {
+                            isMatch = false;
+                            break;
+                        }
+                    }
+                    if(isMatch) {
+                        matchPattern[i].add(idx);
+                    }
+                }
+                idx++;  
+            }
         }
-        return true;
     }
 }
