@@ -2,60 +2,55 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    //hint : 연산자를 배치하는 모든 경우를 DFS로 만들기
-    static int[] numbers;
-    static int[] count = new int[6];
-    static int[] index = {1, 3, 0, 5};
-    static int min = Integer.MAX_VALUE;
+    static int[] count = new int[4];
+    static int[] nums;
     static int max = Integer.MIN_VALUE;
+    static int min = Integer.MAX_VALUE;
     static int N;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
         N = Integer.parseInt(br.readLine());
-        numbers = new int[N];
+        nums = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
         for(int i=0; i<N; i++) {
-            numbers[i] = Integer.parseInt(st.nextToken());
+            nums[i] = Integer.parseInt(st.nextToken());
         }
 
         st = new StringTokenizer(br.readLine());
-        count['+'-'*'] = Integer.parseInt(st.nextToken());
-        count['-'-'*'] = Integer.parseInt(st.nextToken());
-        count[0] = Integer.parseInt(st.nextToken());
-        count['/'-'*'] = Integer.parseInt(st.nextToken());
+        for(int i=0; i<4; i++) {
+            count[i] = Integer.parseInt(st.nextToken());
+        }
 
+        backtracking(nums[0], 1);
 
-        DFS(0, numbers[0]);
+        sb.append(max).append("\n").append(min);
 
-        sb.append(max).append("\n");
-        sb.append(min);
         System.out.println(sb);
         br.close();
     }
 
-    static void DFS(int idx, int current) {
-        if(idx==N-1) {
-            min = Math.min(min, current);
-            max = Math.max(max, current);
+    static void backtracking(int now, int idx) {
+        if(idx == N) {
+            max = Math.max(now, max);
+            min = Math.min(now, min);
+            return;
         }
 
-        for(int i : index) {
+        for(int i=0; i<4; i++) {
             if(count[i] > 0) {
                 count[i]--;
-                DFS(idx+1, apply((char)(i+'*'), numbers[idx+1], current));
+                backtracking(calculate(i, now, nums[idx]), idx+1);
                 count[i]++;
             }
         }
     }
 
-    static int apply(Character operator, int newNum, int prevNum) {
-        switch (operator) {
-            case '+': return prevNum + newNum;
-            case '-': return prevNum - newNum;
-            case '*': return prevNum * newNum;
-            default : return prevNum / newNum;
-        }
+    static int calculate(int type, int f, int s) {
+        if(type == 0) return f+s;
+        if(type == 1) return f-s;
+        if(type == 2) return f*s;
+        else return f/s;
     }
 }
