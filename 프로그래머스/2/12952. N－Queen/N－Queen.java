@@ -1,39 +1,28 @@
 class Solution {
-    boolean[] isColVisited;
-    boolean[] isPlusDiagVisited;
-    boolean[] isMinusDiagVisited;
+    // int plusDiagVisit = 0;
+    // int minusDiagVisit = 0;
+    // int colVisit = 0;
     int cnt = 0;
-    
     public int solution(int n) {
-        isColVisited = new boolean[n];
-        isPlusDiagVisited = new boolean[n*2+1];
-        isMinusDiagVisited = new boolean[n*2+1];
-        tracking(0, n);
-        
-        return cnt;
+        backtracking(0, n, 0, 0, 0);
+        int answer = cnt;
+        return answer;
     }
-    
-    void tracking(int row, int n) {
-        if(n==row) {
+
+    void backtracking(int row, int n, int colIsUsed, int pDiagIsUsed, int mDiagIsUsed) {
+        if(row == n) {
             cnt++;
             return;
         }
-        
+
         for(int i=0; i<n; i++) {
-            int gap = row-i;
-            
-            //-1 -2 -3
-            if(gap < 0) gap = n*2+1+gap;
-            if(!isColVisited[i] && !isPlusDiagVisited[i+row] && !isMinusDiagVisited[gap]) {
-                isColVisited[i] = true;
-                isPlusDiagVisited[i+row] = true;
-                isMinusDiagVisited[gap] = true;
-                
-                tracking(row+1, n);
-                
-                isColVisited[i] = false;
-                isPlusDiagVisited[i+row] = false;
-                isMinusDiagVisited[gap] = false;
+            int plusTemp = row+i;
+            int minusTemp = row-i < 0 ? (n-1)*2+(row-i) : row-i;
+            boolean checkCol = (colIsUsed & (1 << i)) == 0;
+            boolean checkPlusDiag = ((1 << plusTemp) & pDiagIsUsed) == 0;
+            boolean checkMinusDiag = ((1 << minusTemp) & mDiagIsUsed) == 0;
+            if(checkCol && checkPlusDiag && checkMinusDiag) {
+                backtracking(row+1, n, colIsUsed | (1<<i), pDiagIsUsed | (1<<plusTemp), mDiagIsUsed | (1<<minusTemp));
             }
         }
     }
