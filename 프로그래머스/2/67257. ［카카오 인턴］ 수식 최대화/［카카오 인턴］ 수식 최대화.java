@@ -1,80 +1,81 @@
 import java.util.*;
 
 class Solution {
-    char[] base = {'+', '-', '*'};
-    boolean[] isUsed = new boolean[3];
-    char[] order = new char[3];
-    long max = 0;
+    ArrayList<Long> nums = new ArrayList<>();
+    ArrayList<Character> ops = new ArrayList<>();
+    ArrayList<char[]> cases = new ArrayList<>();
+    char[] op = {'+', '-', '*'};
+    boolean[] isVisit = new boolean[3];
+    long max = Long.MIN_VALUE;
     public long solution(String expression) {
-        
-        
-        ArrayList<Long> nums = new ArrayList<>();
-        ArrayList<Character> opers = new ArrayList<>();
-        tokenize(expression, nums, opers);
-        
-        tracking(nums, opers, 0);
+        //경우의 수 구하기
+        getCase(new char[3], 0);
+        //연산자, 피연산자 분리
+        separate(expression);
+        //계산
+        for(int i=0; i<cases.size(); i++) {
+            char[] order = cases.get(i);
+            calculateCase(order);
+        }
         
         return max;
     }
     
-    void tracking(ArrayList<Long> nums, ArrayList<Character> opers, int depth) {
-        if(depth == 3) {
-            long temp = calculate(nums, opers);
-            temp = Math.max(temp, temp*(-1));
-            max = Math.max(max, temp);
+    void getCase(char[] c, int idx) {
+        if(idx == 3) {
+            cases.add(c.clone());
             return;
         }
         
         for(int i=0; i<3; i++) {
-            if(!isUsed[i]) {
-                isUsed[i] = true;
-                order[depth] = base[i];
-                tracking(nums, opers, depth+1);
-                isUsed[i] = false;
+            if(!isVisit[i]) {
+                c[idx] = op[i];
+                isVisit[i] = true;
+                getCase(c, idx+1);
+                isVisit[i] = false;
             }
         }
     }
     
-    long calculate(ArrayList<Long> nums, ArrayList<Character> opers) {
-        
-        ArrayList<Long> copyNums = new ArrayList<>(nums);
-        ArrayList<Character> copyOpers = new ArrayList<>(opers);
-        
-        for(char orderOP : order) {
-            for(int i=0; i<copyOpers.size();) {
-                if(copyOpers.get(i) == orderOP) {
-                    long temp = 0;
-                    if(orderOP == '+') {
-                        temp = copyNums.get(i) + copyNums.get(i+1);
-                    } else if(orderOP == '-') {
-                        temp = copyNums.get(i) - copyNums.get(i+1);
-                    } else if(orderOP == '*') {
-                        temp = copyNums.get(i) * copyNums.get(i+1);
-                    }
-                    copyNums.set(i, temp);
-                    copyNums.remove(i+1);
-                    
-                    copyOpers.remove(i);
+    void calculateCase(char[] order) {
+        ArrayList<Long> numsT = new ArrayList<>(nums);
+        ArrayList<Character> opsT = new ArrayList<>(ops);
+        for(char op : order) {
+            for(int i=0; i<opsT.size();) {
+                if(opsT.get(i) == op) {
+                    long temp = calculate(numsT.get(i), numsT.get(i+1), op);
+                    opsT.remove(i);
+                    numsT.set(i, temp);
+                    numsT.remove(i+1);
                 } else {
                     i++;
                 }
             }
         }
-        
-        return copyNums.get(0);
+        max = Math.max(max, Math.abs(numsT.get(0)));
     }
     
-    void tokenize(String expression, ArrayList<Long> nums, ArrayList<Character> opers) {
-        StringBuilder temp = new StringBuilder();
-        for(char c : expression.toCharArray()) {
-            if(c == '+' || c=='-' || c=='*') {
-                opers.add(c);
-                nums.add(Long.parseLong(temp.toString()));
-                temp = new StringBuilder();
-            } else {
-                temp.append(c);
+    
+    long calculate(long a, long b, char op) {
+        if(op=='-') return a-b;
+        if(op=='+') return a+b;
+        else return a*b;
+    }
+    
+    void separate(String exp) {
+        StringBuilder sb = new StringBuilder();
+        for(char t : exp.toCharArray()) {
+            if(t=='-' || t=='*' || t=='+') {
+                ops.add(t);
+                if(sb.length() != 0) {
+                    nums.add(Long.parseLong(sb.toString()));
+                    sb.setLength(0);
+                }
+            }
+            else {
+                sb.append(t);
             }
         }
-        nums.add(Long.parseLong(temp.toString()));
+        nums.add(Long.parseLong(sb.toString()));
     }
 }
