@@ -1,58 +1,50 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static String tmp = "";
-    static int[][] tree;
+    static int[][] tree = new int['Z'-'A'+1][2];;
+    static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        StringBuilder sb = new StringBuilder();
 
-        int N = Integer.parseInt(st.nextToken());
-        tree = new int[N+1][2];
-
+        int N = Integer.parseInt(br.readLine());
+        StringTokenizer st;
         for(int i=0; i<N; i++) {
             st = new StringTokenizer(br.readLine());
-            int root = st.nextToken().charAt(0) - 'A' + 1;
-            int left = st.nextToken().charAt(0) - 'A' + 1;
-            if(left >= 0) tree[root][0] = left;
-            int right = st.nextToken().charAt(0) - 'A' + 1;
-            if(right >= 0) tree[root][1] = right;
+            char node = st.nextToken().charAt(0);
+            char left = st.nextToken().charAt(0);
+            char right = st.nextToken().charAt(0);
+
+            if(left != '.') tree[node-'A'][0] = left-'A';
+            if(right != '.') tree[node-'A'][1] = right-'A';
         }
 
-        preorder(1);
-        sb.append(tmp).append("\n");
-        tmp = "";
-        inorder(1);
-        sb.append(tmp).append("\n");
-        tmp = "";
-        postorder(1);
-        sb.append(tmp);
+        preOrder(0);
+        sb.append("\n");
+        order(0);
+        sb.append("\n");
+        postOrder(0);
 
         System.out.println(sb);
-        br.close();
-
     }
 
-    static void preorder(int root) {
-        if(root == 0) return;
-        tmp += String.valueOf((char)(root+'A'-1));
-        preorder(tree[root][0]);
-        preorder(tree[root][1]);
+    static void preOrder(int node) {
+        sb.append((char)(node+'A'));
+        if(tree[node][0] != 0) preOrder(tree[node][0]);
+        if(tree[node][1] != 0) preOrder(tree[node][1]);
     }
 
-    static void inorder(int root) {
-        if(root == 0) return;
-        inorder(tree[root][0]);
-        tmp += String.valueOf((char)(root+'A'-1));
-        inorder(tree[root][1]);
+    static void postOrder(int node) {
+        if(tree[node][0] != 0) postOrder(tree[node][0]);
+        if(tree[node][1] != 0) postOrder(tree[node][1]);
+        sb.append((char)(node+'A'));
     }
 
-    static void postorder(int root) {
-        if(root == 0) return;
-        postorder(tree[root][0]);
-        postorder(tree[root][1]);
-        tmp += String.valueOf((char)(root+'A'-1));
+    static void order(int node) {
+        if(tree[node][0] != 0) order(tree[node][0]);
+        sb.append((char)(node+'A'));
+        if(tree[node][1] != 0) order(tree[node][1]);
     }
 }
