@@ -1,22 +1,25 @@
 class Solution {
-    public String solution(String number, int K) {
+    public String solution(String number, int k) {
         String answer = "";
         StringBuilder sb = new StringBuilder();
         char[] nums = number.toCharArray();
-        K = nums.length-K;
-        int start = 0;
-        for(int k=K-1; k>=0; k--) {
-            char max = '0';
-            for(int i=start; i<nums.length-k; i++) {
-                if(max-'0' < nums[i]-'0') {
-                    max = nums[i];
-                    start = i+1;
+        int cnt = k;
+        for(char n : nums) {
+            for(int i=sb.length(); i>=0; i--) {
+                if(sb.length() > 0 && sb.charAt(sb.length()-1) < n && cnt > 0) {
+                    sb.deleteCharAt(sb.length()-1);
+                    cnt--;
+                } else{
+                    break;
                 }
             }
-            sb.append(max);
+            sb.append(n);
         }
         
-        
+        while(cnt > 0) {
+            sb.deleteCharAt(sb.length()-1);
+            cnt--;
+        }
         return sb.toString();
     }
 }
