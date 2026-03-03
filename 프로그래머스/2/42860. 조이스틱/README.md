@@ -1,10 +1,10 @@
 # [level 2] 조이스틱 - 42860 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42860?gad_source=1&gad_campaignid=22499034228&gbraid=0AAAAAC_c4nBLGAH58R36WlHxpoK0xRUco&gclid=Cj0KCQiAtfXMBhDzARIsAJ0jp3AT2Notzj-emEvaZqQ38Cvriee5zVUwZf49hTE9ZDAMsAn6WHVzGkAaAjeaEALw_wcB#) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42860#qna) 
 
 ### 성능 요약
 
-메모리: 85.3 MB, 시간: 0.06 ms
+메모리: 80.9 MB, 시간: 8.21 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 02월 25일 15:37:58
+2026년 03월 03일 22:47:14
 
 ### 문제 설명
 

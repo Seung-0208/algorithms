@@ -1,24 +1,25 @@
 class Solution {
     public int solution(String name) {
-        char[] token = name.toCharArray();
-        int answer = 0;
-        
-        for(char c : token) {
-            answer += Math.min(c-'A', 'Z'-c+1);
+        char[] alpha = name.toCharArray();
+        int count = 0;
+        for(char c : alpha) {
+            count += Math.min(c-'A', 'Z'-c+1);
         }
         
-        int move = token.length-1;
-        for(int i=0; i<token.length; i++) {
-            int next = i+1;
-            while(next < token.length && token[next]=='A') next++;
-            
-            int case1 = i*2 + (token.length-next);
-            move = Math.min(move, case1);
-            int case2 = i + (token.length-next)*2;
-            move = Math.min(move, case2);
+        int move = alpha.length-1;
+        int temp = Integer.MAX_VALUE;
+        for(int i=1; i<alpha.length; i++) {
+            int s = i;
+            if(alpha[i]=='A') {
+                while(s<alpha.length && alpha[s]=='A') s++;
+                temp = Math.min(temp, (i-1)*2+1 + (alpha.length-s-1));
+                temp = Math.min(temp, i-1+(alpha.length-s)*2);
+                System.out.println("temp: "+temp);
+            }
         }
-        answer += move;
-        
-        return answer;
+        if(temp != Integer.MAX_VALUE) move = Math.min(move, temp);
+        System.out.println("move: "+move);
+        count += move;
+        return count;
     }
 }
