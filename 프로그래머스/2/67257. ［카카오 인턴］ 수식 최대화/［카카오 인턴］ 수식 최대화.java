@@ -3,77 +3,85 @@ import java.util.*;
 class Solution {
     ArrayList<Long> nums = new ArrayList<>();
     ArrayList<Character> ops = new ArrayList<>();
+    char[] temp = {'+', '-', '*'};
+    boolean[] isVisited = new boolean[3];
     ArrayList<char[]> cases = new ArrayList<>();
-    char[] op = {'+', '-', '*'};
-    boolean[] isVisit = new boolean[3];
     long max = Long.MIN_VALUE;
     public long solution(String expression) {
-        //경우의 수 구하기
-        getCase(new char[3], 0);
-        //연산자, 피연산자 분리
         separate(expression);
-        //계산
-        for(int i=0; i<cases.size(); i++) {
-            char[] order = cases.get(i);
-            calculateCase(order);
+        
+        tracking(new char[] {'0', '0', '0'}, 0);
+        System.out.printf("개수: %d\n", cases.size());
+        for(char[] c : cases) {
+            System.out.println(c);
+            calculate(c);
         }
         
         return max;
     }
     
-    void getCase(char[] c, int idx) {
-        if(idx == 3) {
-            cases.add(c.clone());
-            return;
-        }
-        
-        for(int i=0; i<3; i++) {
-            if(!isVisit[i]) {
-                c[idx] = op[i];
-                isVisit[i] = true;
-                getCase(c, idx+1);
-                isVisit[i] = false;
-            }
-        }
-    }
-    
-    void calculateCase(char[] order) {
-        ArrayList<Long> numsT = new ArrayList<>(nums);
-        ArrayList<Character> opsT = new ArrayList<>(ops);
-        for(char op : order) {
-            for(int i=0; i<opsT.size();) {
-                if(opsT.get(i) == op) {
-                    long temp = calculate(numsT.get(i), numsT.get(i+1), op);
-                    opsT.remove(i);
-                    numsT.set(i, temp);
-                    numsT.remove(i+1);
+    void calculate(char[] orders) {
+        ArrayList<Long> copyNums = new ArrayList<>(nums);
+        ArrayList<Character> copyOps = new ArrayList<>(ops);
+        for(char order : orders) {
+            for(int i=0; i<copyOps.size();) {
+                char op = copyOps.get(i);
+                if(op == order) {
+                    long t = operator(copyNums.get(i), copyNums.get(i+1), op);
+                    copyNums.set(i, t);
+                    copyNums.remove(i+1);
+                    System.out.println(copyNums.toString());
+                    copyOps.remove(i);
                 } else {
                     i++;
                 }
             }
         }
-        max = Math.max(max, Math.abs(numsT.get(0)));
+//         if(copyOps.size() == 1) {
+            
+//             for(int i=0; i<copyNums.size()-1; i++) {
+//                 int temp = operator(copyNums.get(i), copyNums.get(i+1), copyOps.get(0));
+//                 copyNums.set(i, temp);
+//                 copyNums.remove(i+1);
+//             }
+//         }
+        
+        max = Math.max(max, Math.abs(copyNums.get(0)));
     }
     
-    
-    long calculate(long a, long b, char op) {
-        if(op=='-') return a-b;
-        if(op=='+') return a+b;
-        else return a*b;
+    long operator(long a, long b, char oper) {
+        if(oper == '+') return a+b;
+        if(oper == '-') return a-b;
+        if(oper == '*') return a*b;
+        else return 0;
     }
     
-    void separate(String exp) {
-        StringBuilder sb = new StringBuilder();
-        for(char t : exp.toCharArray()) {
-            if(t=='-' || t=='*' || t=='+') {
-                ops.add(t);
-                if(sb.length() != 0) {
-                    nums.add(Long.parseLong(sb.toString()));
-                    sb.setLength(0);
-                }
+    void tracking(char[] c, int cnt) {
+        if(cnt==3) {
+            cases.add(new char[] {c[0], c[1], c[2]});
+            return;
+        }
+        
+        for(int i=0; i<3; i++) {
+            if(!isVisited[i]) {
+                c[cnt] = temp[i];
+                isVisited[i] = true;
+                tracking(c, cnt+1); 
+                isVisited[i] = false;
             }
-            else {
-                sb.append(t);
+        }
+    }
+    
+    void separate(String expression) {
+        char[] token = expression.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<token.length; i++) {
+            if(token[i] != '-' && token[i] != '*' && token[i] != '+') {
+                sb.append(token[i]);
+            } else {
+                nums.add(Long.parseLong(sb.toString()));
+                sb.delete(0, sb.length());
+                ops.add(token[i]);
             }
         }
         nums.add(Long.parseLong(sb.toString()));
