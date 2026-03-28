@@ -1,24 +1,16 @@
 class Solution {
     public int solution(int n, int[] stations, int w) {
+        int range = w*2+1;
         int answer = 0;
-        int wDist = w*2+1;
-        
-        int min = 0;
-        int max = -1;
-        for(int i=0; i<stations.length; i++) {
-            int s = stations[i]-1;
-            min = Math.max(0, s-w);
-            
-            int temp = min-max-1;
-            if(temp != 0) {
-                answer += ((temp+wDist-1)/wDist);
+        int e=0;
+        for(int a : stations) {
+            if(a-w-1-e > 0) {
+                answer += (a-w-1-e+range-1)/range;
             }
-            max = Math.min(n-1, s+w);
+            e = a+w;
         }
-        if(max < n-1) {
-            int temp = n-max-1;
-            answer += temp/wDist;
-            if(temp%wDist != 0) answer++;
+        if(e < n) {
+            answer += (n-e+range-1)/range;
         }
 
         return answer;
