@@ -1,24 +1,21 @@
 class Solution {
     public String solution(String number, int k) {
-        String answer = "";
         StringBuilder sb = new StringBuilder();
-        char[] nums = number.toCharArray();
-        int cnt = k;
-        for(char n : nums) {
-            for(int i=sb.length(); i>=0; i--) {
-                if(sb.length() > 0 && sb.charAt(sb.length()-1) < n && cnt > 0) {
-                    sb.deleteCharAt(sb.length()-1);
-                    cnt--;
-                } else{
-                    break;
-                }
+        char[] ch = number.toCharArray();
+        sb.append(ch[0]);
+        int cnt = 0;
+        
+        for(int i=1; i<ch.length; i++) {
+            while(sb.length() > 0 && sb.charAt(sb.length()-1) < ch[i] && cnt < k) {
+                cnt++;
+                sb.deleteCharAt(sb.length()-1);
             }
-            sb.append(n);
+            sb.append(ch[i]);
         }
         
-        while(cnt > 0) {
+        while(cnt < k) {
             sb.deleteCharAt(sb.length()-1);
-            cnt--;
+            cnt++;
         }
         return sb.toString();
     }
