@@ -1,25 +1,28 @@
 class Solution {
     public int solution(String name) {
-        char[] alpha = name.toCharArray();
-        int count = 0;
-        for(char c : alpha) {
-            count += Math.min(c-'A', 'Z'-c+1);
+        int answer = 0;
+        char[] chs = name.toCharArray();
+        int N = chs.length;
+        for(char c : chs) {
+            answer += Math.min(c-'A', 'Z'-c+1);
         }
-        
-        int move = alpha.length-1;
-        int temp = Integer.MAX_VALUE;
-        for(int i=1; i<alpha.length; i++) {
-            int s = i;
-            if(alpha[i]=='A') {
-                while(s<alpha.length && alpha[s]=='A') s++;
-                temp = Math.min(temp, (i-1)*2+1 + (alpha.length-s-1));
-                temp = Math.min(temp, i-1+(alpha.length-s)*2);
-                System.out.println("temp: "+temp);
+        int move = N-1;
+        for(int i=0; i<N; i++) {
+            if(chs[i] == 'A') {
+                int s = i;
+                while(chs[i] == 'A') {
+                    i++;
+                    if(i>=N) {
+                        break;
+                    }
+                }
+                if(s==0) s=1;
+                int temp = Math.min((s-1)*2+1+N-1-i, s+(N-1-i)*2+1);
+                move = Math.min(temp, move);
             }
         }
-        if(temp != Integer.MAX_VALUE) move = Math.min(move, temp);
-        System.out.println("move: "+move);
-        count += move;
-        return count;
+        if(move < 0) move = 0;
+        System.out.println("move="+move);
+        return answer+move;
     }
 }
