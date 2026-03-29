@@ -4,27 +4,24 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int[][] parent;
-    static ArrayList<Integer>[] graph;
     static int N, K;
+    static ArrayList<Integer>[] graph;
+    static int[][] parent;
     static int[] depth;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
         N = Integer.parseInt(br.readLine());
-        K = 1;
-        int temp = 2;
-
-        while(temp <= N) {
-            temp *= 2;
+        K =1;
+        while(Math.pow(2, K) <= N) {
             K++;
         }
-
-        parent = new int[N+1][K+1];
-        depth = new int[N+1];
         graph = new ArrayList[N+1];
         for(int i=1; i<=N; i++) graph[i] = new ArrayList<>();
+        parent = new int[K+1][N+1];
+        depth = new int[N+1];
+
         StringTokenizer st;
         for(int i=0; i<N-1; i++) {
             st = new StringTokenizer(br.readLine());
@@ -34,11 +31,11 @@ public class Main {
             graph[b].add(a);
         }
 
-        BFS();
+        initialize();
 
-        for(int i=1; i<=K; i++) {
-            for(int j=1; j<=N; j++) {
-                parent[j][i] = parent[parent[j][i-1]][i-1];
+        for(int k=1; k<=K; k++) {
+            for(int i=1; i<=N; i++) {
+                parent[k][i] = parent[k-1][parent[k-1][i]];
             }
         }
 
@@ -52,6 +49,7 @@ public class Main {
         }
 
         System.out.println(sb);
+        br.close();
     }
 
     static int getLCA(int a, int b) {
@@ -61,53 +59,53 @@ public class Main {
             b = temp;
         }
 
-        for(int k = K; k>=0; k--) {
-            if((int)(Math.pow(2, k)) <= depth[a]-depth[b]) {
-                a = parent[a][k];
+        for(int k=K; k>=0; k--) {
+            if(Math.pow(2, k) <= depth[a] - depth[b]) {
+                a = parent[k][a];
             }
         }
 
         for(int k=K; k>=0; k--) {
-            if(parent[a][k] != parent[b][k]) {
-                a = parent[a][k];
-                b = parent[b][k];
+            if(parent[k][a] != parent[k][b]) {
+                a = parent[k][a];
+                b = parent[k][b];
             }
         }
 
-        if(a!=b) {
-            a = parent[a][0];
+        if(a != b) {
+            a = parent[0][a];
         }
+
         return a;
     }
 
-    static void BFS() {
-        boolean[] isVisited = new boolean[N+1];
-        isVisited[1] = true;
+    static void initialize() {
         Queue<Integer> q = new ArrayDeque<>();
         q.add(1);
-
+        boolean[] isVisited = new boolean[N+1];
+        isVisited[1] = true;
         int level = 1;
         int cnt = 0;
         int childCnt = 1;
-
         while(!q.isEmpty()) {
-            int cur = q.poll();
-            depth[cur] = level;
+            int curr = q.poll();
+            depth[curr] = level;
 
-            for(int next : graph[cur]) {
-                if(!isVisited[next]) {
-                    parent[next][0] = cur;
-                    q.add(next);
-                    isVisited[next] = true;
+            for(int child : graph[curr]) {
+                if(!isVisited[child]) {
+                    q.add(child);
+                    isVisited[child] = true;
+                    parent[0][child] = curr;
+
                 }
             }
 
             cnt++;
 
             if(cnt == childCnt) {
+                childCnt = q.size();
                 cnt = 0;
                 level++;
-                childCnt = q.size();
             }
         }
     }
