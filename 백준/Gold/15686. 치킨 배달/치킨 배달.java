@@ -4,72 +4,65 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int[][] map;
-    static ArrayList<int[]> chickens = new ArrayList<>();
     static ArrayList<int[]> homes = new ArrayList<>();
-    static int N,M;
+    static ArrayList<int[]> chickens = new ArrayList<>();
+    static int M;
     static int min = Integer.MAX_VALUE;
+    static ArrayList<int[]> selected = new ArrayList<>();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
+
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        map = new int[N][N];
         for(int i=0; i<N; i++) {
             st = new StringTokenizer(br.readLine());
             for(int j=0; j<N; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-                if(map[i][j] == 2) chickens.add(new int[] {i, j});
-                if(map[i][j] == 1) homes.add(new int[] {i, j});
+                int type = Integer.parseInt(st.nextToken());
+                if(type == 2) chickens.add(new int[]{i,j});
+                if(type == 1) homes.add(new int[]{i, j});
             }
         }
 
-        M = chickens.size()-M; //폐점시켜야 하는 치킨집의 수
+        if(chickens.size() == M) {
+            min = calculate(chickens);
+        } else {
+            for(int i=0; i< chickens.size(); i++) {
+                selected = new ArrayList<>();
+                backtracking(i);
+            }
+        }
 
-        tracking(0, 0);
         sb.append(min);
-
         System.out.println(sb);
+        br.close();
     }
 
-    static void tracking(int idx, int cnt) {
-        if(cnt == M) {
-            calculate();
+    static void backtracking(int idx) {
+        if(selected.size() == M) {
+            min = Math.min(min, calculate(selected));
             return;
         }
 
+
         for(int i=idx; i<chickens.size(); i++) {
-            int nr = chickens.get(i)[0];
-            int nc = chickens.get(i)[1];
-            if(map[nr][nc] == 2) {
-                map[nr][nc] = 0;
-                tracking(i+1, cnt+1);
-                map[nr][nc] = 2;
-            }
+            selected.add(new int[] {chickens.get(i)[0], chickens.get(i)[1]});
+            backtracking(i+1);
+            selected.remove(selected.size()-1);
         }
     }
 
-    static void calculate() {
-        ArrayList<int[]> chickensT = new ArrayList<>();
-        for(int i=0; i<N; i++) {
-            for(int j=0; j<N; j++) {
-                if(map[i][j] == 2) {
-                    chickensT.add(new int[] {i, j});
-                }
-            }
-        }
-
+    static int calculate(ArrayList<int[]> selected) {
         int sum = 0;
-        for(int[] h : homes) {
-            int t = Integer.MAX_VALUE;
-            for(int[] c : chickensT) {
-                t = Math.min(t, Math.abs(h[0]-c[0])+Math.abs(h[1]-c[1]));
+        for(int[] home : homes) {
+            int temp = Integer.MAX_VALUE;
+            for(int[] chi : selected) {
+                temp = Math.min(temp, Math.abs(home[0]-chi[0])+Math.abs(home[1]-chi[1]));
             }
-            sum += t;
+            sum+=temp;
         }
-
-        min = Math.min(sum, min);
+        return sum;
     }
 }
