@@ -3,85 +3,72 @@ import java.util.*;
 class Solution {
     ArrayList<Long> nums = new ArrayList<>();
     ArrayList<Character> ops = new ArrayList<>();
-    char[] temp = {'+', '-', '*'};
-    boolean[] isVisited = new boolean[3];
     ArrayList<char[]> cases = new ArrayList<>();
-    long max = Long.MIN_VALUE;
+    char[] operator = {'+', '-', '*'};
+    boolean[] isVisited = new boolean[3];
     public long solution(String expression) {
         separate(expression);
+        getCases(0, new char[] {'+', '-', '*'});
         
-        tracking(new char[] {'0', '0', '0'}, 0);
-        System.out.printf("개수: %d\n", cases.size());
+        long answer = 0;
         for(char[] c : cases) {
-            System.out.println(c);
-            calculate(c);
+            long temp = calculate(c);
+            answer = Math.max(answer, temp);
         }
-        
-        return max;
+        return answer;
     }
     
-    void calculate(char[] orders) {
-        ArrayList<Long> copyNums = new ArrayList<>(nums);
-        ArrayList<Character> copyOps = new ArrayList<>(ops);
-        for(char order : orders) {
-            for(int i=0; i<copyOps.size();) {
-                char op = copyOps.get(i);
-                if(op == order) {
-                    long t = operator(copyNums.get(i), copyNums.get(i+1), op);
-                    copyNums.set(i, t);
-                    copyNums.remove(i+1);
-                    System.out.println(copyNums.toString());
-                    copyOps.remove(i);
+    long calculate(char[] cases) {
+        ArrayList<Long> cpNums = new ArrayList<>(nums);
+        ArrayList<Character> cpOps = new ArrayList<>(ops);
+        for(char c : cases) {
+            for(int i=0; i<cpOps.size();) {
+                if(cpOps.get(i) == c) {
+                    long temp = oper(cpNums.get(i), cpNums.get(i+1), c);
+                    cpNums.set(i, temp);
+                    cpNums.remove(i+1);
+                    cpOps.remove(i);
                 } else {
                     i++;
                 }
             }
         }
-//         if(copyOps.size() == 1) {
-            
-//             for(int i=0; i<copyNums.size()-1; i++) {
-//                 int temp = operator(copyNums.get(i), copyNums.get(i+1), copyOps.get(0));
-//                 copyNums.set(i, temp);
-//                 copyNums.remove(i+1);
-//             }
-//         }
-        
-        max = Math.max(max, Math.abs(copyNums.get(0)));
+        return Math.abs(cpNums.get(0));
     }
     
-    long operator(long a, long b, char oper) {
-        if(oper == '+') return a+b;
-        if(oper == '-') return a-b;
-        if(oper == '*') return a*b;
-        else return 0;
+    long oper(long a, long b, char op) {
+        if(op=='+') return a+b;
+        if(op=='-') return a-b;
+        if(op=='*') return a*b;
+        else return Integer.MIN_VALUE;
     }
     
-    void tracking(char[] c, int cnt) {
-        if(cnt==3) {
-            cases.add(new char[] {c[0], c[1], c[2]});
+    void getCases(int cnt, char[] temp) {
+        if(cnt == 3) {
+            cases.add(new char[] {temp[0], temp[1], temp[2]});
             return;
         }
         
         for(int i=0; i<3; i++) {
             if(!isVisited[i]) {
-                c[cnt] = temp[i];
                 isVisited[i] = true;
-                tracking(c, cnt+1); 
+                temp[cnt] = operator[i];
+                getCases(cnt+1, temp);
                 isVisited[i] = false;
             }
         }
     }
     
     void separate(String expression) {
-        char[] token = expression.toCharArray();
+        char[] temp = expression.toCharArray();
         StringBuilder sb = new StringBuilder();
-        for(int i=0; i<token.length; i++) {
-            if(token[i] != '-' && token[i] != '*' && token[i] != '+') {
-                sb.append(token[i]);
-            } else {
+        for(char c : temp) {
+            if(c=='+' || c=='-' || c=='*') {
+                ops.add(c);
                 nums.add(Long.parseLong(sb.toString()));
                 sb.delete(0, sb.length());
-                ops.add(token[i]);
+            } else {
+                sb.append(c);
             }
         }
         nums.add(Long.parseLong(sb.toString()));
