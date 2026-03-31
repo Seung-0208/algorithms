@@ -1,43 +1,47 @@
 import java.io.*;
 import java.util.*;
 
-public class Main{
-
-    static boolean[] visited;
-    static ArrayList<Integer>[] A;
-
+public class Main {
+    static boolean[] isVisited;
+    static ArrayList<Integer>[] graph;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        visited = new boolean[N+1];
-        A = new ArrayList[N+1];
-        for(int i=1; i<=N; i++) {
-            A[i] = new ArrayList<>();
-        }
+        isVisited = new boolean[N+1];
+        graph = new ArrayList[N+1];
+        for(int i=1; i<=N; i++) graph[i] = new ArrayList<>();
+
         for(int i=0; i<M; i++) {
             st = new StringTokenizer(br.readLine());
-            int u = Integer.parseInt(st.nextToken());
-            int v = Integer.parseInt(st.nextToken());
-            A[u].add(v);
-            A[v].add(u);
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a);
         }
-        int cnt = 0;
+
+        int ans = 0;
         for(int i=1; i<=N; i++) {
-            if(!visited[i]) {
+            if(!isVisited[i]) {
+                ans++;
                 DFS(i);
-                cnt++;
             }
         }
-        System.out.println(cnt);
+
+        sb.append(ans);
+        System.out.println(sb);
+        br.close();
     }
 
-    static void DFS(int node) {
-        if(visited[node]) return;
-        visited[node] = true;
-        for(int n : A[node]) {
-            if(!visited[n]) DFS(n);
+    static void DFS(int n) {
+        for(int child : graph[n]) {
+            if(!isVisited[child]) {
+                isVisited[child] = true;
+                DFS(child);
+            }
         }
     }
 }
