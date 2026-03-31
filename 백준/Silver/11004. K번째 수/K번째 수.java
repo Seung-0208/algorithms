@@ -1,54 +1,58 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
-public class Main{
-    public static void main(String[] args) throws IOException {
+public class Main {
+        static int[] nums;
+        static int K;
+        public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
+
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken())-1;
+
+        nums = new int[N];
         st = new StringTokenizer(br.readLine());
-        int[] ns = new int[N];
         for(int i=0; i<N; i++) {
-            ns[i] = Integer.parseInt(st.nextToken());
+            nums[i] = Integer.parseInt(st.nextToken());
         }
-        quickSort(ns, 0, N-1, K-1);
-        bw.write(String.valueOf(ns[K-1]));
-        bw.flush();
+
+        partition(0, N-1);
+        sb.append(nums[K]);
+        System.out.println(sb);
+        br.close();
     }
-    public static void quickSort(int[] arr, int start, int end, int K) throws IOException {
-        if(start < end) {
-            int pivot = partition(arr, start, end);
-            if(pivot == K) return;
-            else if(K<pivot) quickSort(arr, start, pivot-1, K);
-            else quickSort(arr, pivot+1, end, K);
-        }
+
+    static void partition(int s, int e) {
+        if(s > e) return;
+        int pivot = quickSort(s, e);
+        if(pivot < K) partition(pivot+1, e);
+        else if(pivot > K) partition(s, pivot-1);
     }
-    public static int partition(int[] arr, int start, int end){
-        if(start+1 == end) {
-            if(arr[start] > arr[end]) swap(arr, start, end);
-            return end;
+
+    static int quickSort(int s, int e) {
+        int m = (s+e)/2;
+        swap(s, m);
+        int pivot = nums[s];
+        int i=s+1, j = e;
+
+        while(i<=j) {
+            while(i<=e && nums[i] < pivot) i++;
+            while(j>=s && nums[j] > pivot) j--;
+            if(i<=j) swap(i++, j--);
         }
-        int m = (start+end)/2;
-        swap(arr, start, m);
-        int pivot = arr[start];
-        int i = start+1, j = end;
-        while(i <= j) {
-            //⚠️여기서 pivot과 arr값을 비교 시 =을 추가하면 시간 초과 됨
-            while(j >= start+1 && pivot < arr[j]) j--;
-            while(i <= end && pivot > arr[i]) i++;
-            if(i <= j) swap(arr, i++, j--);
-        }
-        arr[start] = arr[j];
-        arr[j] = pivot;
+        nums[s] = nums[j];
+        nums[j] = pivot;
         return j;
     }
 
-    public static void swap(int[] arr, int a, int b){
-        int temp = arr[a];
-        arr[a] = arr[b];
-        arr[b] = temp;
+    static void swap(int a, int b) {
+        int temp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = temp;
     }
 }
-
