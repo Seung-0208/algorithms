@@ -1,65 +1,66 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
-public class Main{
-    static ArrayList<Integer>[] A;
-    static boolean[] visited;
-    static boolean[] visitedBFS;
-    static String dfsResult;
-    static String bfsResult;
-
+public class Main {
+    static boolean[] isVisited;
+    static ArrayList<Integer>[] graph;
+    static int N;
+    static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        int V = Integer.parseInt(st.nextToken());
-        visited = new boolean[N+1];
-        visitedBFS = new boolean[N+1];
-        A = new ArrayList[N+1];
-        dfsResult = new String();
-        bfsResult = new String();
-        for(int i=1; i<=N; i++) A[i] = new ArrayList<>();
+        int start = Integer.parseInt(st.nextToken());
+        isVisited = new boolean[N+1];
+        graph = new ArrayList[N+1];
+        for(int i=1; i<=N; i++) graph[i] = new ArrayList<>();
+
         for(int i=0; i<M; i++) {
             st = new StringTokenizer(br.readLine());
-            int u = Integer.parseInt(st.nextToken());
-            int v = Integer.parseInt(st.nextToken());
-            A[u].add(v);
-            A[v].add(u);
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a);
         }
-        for(int i=1; i<=N; i++) Collections.sort(A[i]);
-        visited[V] = true;
-        dfsResult += String.valueOf(V) + " ";
-        for(Integer i : A[V]) {
-            if(!visited[i]) DFS(i);
+
+        for(int i=1; i<=N; i++) {
+            Collections.sort(graph[i]);
         }
-        System.out.println(dfsResult);
-        BFS(V);
-        System.out.println(bfsResult);
+
+        isVisited[start] = true;
+        DFS(start);
+        sb.append("\n");
+        BFS(start);
+        System.out.println(sb);
+        br.close();
     }
 
-    static void DFS(int node) {
-        if(visited[node]) return;
-        visited[node] = true;
-        dfsResult += String.valueOf(node) + " ";
-        for(Integer i : A[node]) {
-            if(!visited[i]) DFS(i);
-        }
-    }
+    static void BFS(int n) {
+        Queue<Integer> q = new ArrayDeque<>();
+        q.add(n);
+        boolean[] isVisited = new boolean[N+1];
+        isVisited[n] = true;
 
-    static void BFS(int start) {
-        Queue<Integer> queue = new LinkedList<Integer>();
-        queue.add(start);
-        visitedBFS[start] = true;
-        while(!queue.isEmpty()) {
-            int node = queue.poll();
-            bfsResult += String.valueOf(node) + " ";
-            for(Integer i : A[node]) {
-                if(!visitedBFS[i]) {
-                    visitedBFS[i] = true;
-                    queue.add(i);
+        while(!q.isEmpty()) {
+            int cur = q.poll();
+            sb.append(cur).append(" ");
+            for(int child : graph[cur]) {
+                if(!isVisited[child]) {
+                    isVisited[child] = true;
+                    q.add(child);
                 }
+            }
+        }
+    }
+
+    static void DFS(int n) {
+        sb.append(n).append(" ");
+        for(int child : graph[n]) {
+            if(!isVisited[child]) {
+                isVisited[child] = true;
+                DFS(child);
             }
         }
     }
