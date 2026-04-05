@@ -1,64 +1,58 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main {
-        static int N;
-        static int[] nums;
-        static int[] copy;
-        public static void main(String[] args) throws IOException {
+    static int N;
+    static int[] nums;
+    static int[] copyNums;
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
+//        StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = Integer.parseInt(br.readLine());
         nums = new int[N];
-        copy = new int[N];
-
-        for(int i=0; i<N; i++ ) {
-            nums[i] = Integer.parseInt(br.readLine());
-        }
+        copyNums = new int[N];
+        for(int i=0; i<N; i++) nums[i] = Integer.parseInt(br.readLine());
 
         mergeSort(0, N-1);
-
-        for(int t : nums) sb.append(t).append("\n");
+        for(int i=0; i<N; i++) sb.append(nums[i]).append("\n");
         System.out.println(sb);
         br.close();
     }
 
-    static void mergeSort(int s, int e){
+    static void mergeSort(int s, int e) {
         if(s >= e) return;
 
         int m = (s+e)/2;
         mergeSort(s, m);
         mergeSort(m+1, e);
 
-        System.arraycopy(nums, s, copy, s, (e-s)+1);
+        System.arraycopy(nums, s, copyNums, s, e-s+1);
 
-        int i=s, j=m+1;
-        int k=s;
+        int i = s, j = m+1;
+        int k = s;
 
-        while(i<=m && j<=e) {
-            if(copy[i] < copy[j]) {
-                nums[k] = copy[i];
+        while(i < j && i<=m && j<=e) {
+            if(copyNums[i] < copyNums[j]) {
+                nums[k] = copyNums[i];
                 i++;
-            } else {
-                nums[k] = copy[j];
+            }
+            else {
+                nums[k] = copyNums[j];
                 j++;
             }
             k++;
         }
 
         while(i<=m) {
-            nums[k] = copy[i];
-            i++;
-            k++;
+            nums[k] = copyNums[i];
+            k++; i++;
         }
 
         while(j<=e) {
-            nums[k] = copy[j];
-            j++;
-            k++;
+            nums[k] = copyNums[j];
+            k++; j++;
         }
     }
 }
