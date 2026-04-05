@@ -1,42 +1,44 @@
 import java.io.*;
 import java.util.*;
 
-public class Main{
+public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
+//        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken());
-        Data[] nums = new Data[N];
+        int N = Integer.parseInt(br.readLine());
+        Node[] nums = new Node[N];
         for(int i=0; i<N; i++) {
-            st = new StringTokenizer(br.readLine());
-            int tmp = Integer.parseInt(st.nextToken());
-            nums[i] = new Data(tmp, i);
+            int t = Integer.parseInt(br.readLine());
+            nums[i] = new Node(t, i);
         }
+
         Arrays.sort(nums);
 
-        int max = 0;
+        int ans = 0;
         for(int i=0; i<N; i++) {
-            int gap = nums[i].idx - i;
-            if(gap > max) max = gap;
+            ans = Math.max(ans, nums[i].idx-i);
         }
+        
+        ans++;
 
-        bw.write(String.valueOf(max+1));
-        bw.flush();
+        sb.append(ans);
+
+        System.out.println(sb);
+        br.close();
     }
 
-    static class Data implements Comparable<Data>{
-        int value;
-        int idx;
-        public Data(int value, int idx) {
+    static class Node implements Comparable<Node>{
+        int value, idx;
+        public Node(int value, int idx) {
             this.value = value;
             this.idx = idx;
         }
 
         @Override
-        public int compareTo(Data o) {
-            return this.value - o.value;
+        public int compareTo(Node o1) {
+            return this.value - o1.value;
         }
     }
 }
