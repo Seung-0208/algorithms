@@ -12,12 +12,14 @@ long long getSum(int i, int j) {
     while(i<=j) {
         if(i%2 != 0) {
             sum += tree[i];
+            i++;
         }
         if(j%2 == 0) {
             sum += tree[j];
+            j--;
         }
-        i = (i+1)/2;
-        j = (j-1)/2;
+        i /= 2;
+        j /= 2;
     }
     return sum;
 }
