@@ -5,34 +5,32 @@
 using namespace std;
 
 struct CMP {
-    bool operator() (int a, int b) const {
-        string a1 = to_string(a);
-        string b1 = to_string(b);
+    bool operator()(int a, int b) const {
+        string as = to_string(a);
+        string bs = to_string(b);
         
-        int temp1 = stoi(a1+b1);
-        int temp2 = stoi(b1+a1);
-        
-        return temp1 <= temp2;
-    }  
+        return (as+bs) < (bs+as);
+    }
 };
 
 string solution(vector<int> numbers) {
-    string answer = "";
-    priority_queue<int, vector<int>, CMP> q;
+    
+    priority_queue<int, vector<int>, CMP> pq;
+    
     bool isAllZero = true;
-    for(int n : numbers){
-        if(n != 0) isAllZero = false;
-        q.push(n);
+    for(int n : numbers) {
+        if(n!=0 && isAllZero) isAllZero = false;
+        pq.push(n);
     }
     
     if(isAllZero) return "0";
     
-    while(!q.empty()) {
-        int t = q.top();
-        q.pop();
-        answer += to_string(t);
+    string answer = "";
+    
+    while(!pq.empty()) {
+        answer += to_string(pq.top());
+        pq.pop();
     }
-    
-    
+        
     return answer;
 }
