@@ -5,45 +5,43 @@
 using namespace std;
 
 int solution(int distance, vector<int> rocks, int n) {
+    vector<int> arr(rocks.size()+2, 0);
+    
     sort(rocks.begin(), rocks.end());
-    vector<int> allRocks(rocks.size()+2);
-    allRocks[0] = 0;
-    int i = 1;
-    for(int r : rocks) {
-        allRocks[i] = r;
-        i++;
+    
+    arr[rocks.size()+1] = distance;
+    for(int i=1; i<=rocks.size(); i++) {
+        arr[i] = rocks[i-1];
     }
-    allRocks[i] = distance;
     
     int s = 0, e = distance*2;
-    
     int answer = 0;
     
     while(s<=e) {
-        int X = (s+e)/2;
+        int prev = 0; //마지막으로 남긴 돌
+        int removed = 0; //없앤 돌의 개수
         
-        int prev = 0;
-        int removed = 0;
+        int k = (s+e)/2;
         
-        for(int i=1; i<allRocks.size(); i++) {
-            int r = allRocks[i];
-            if(r-prev < X) {
-                removed++;
-                if(removed > n) break;
-            } else {
-                prev = r;
+        bool isPossible = true;
+        
+        for(int i=1; i<rocks.size()+2; i++) {
+            if(arr[i]-prev < k) removed++;
+            else prev = arr[i];
+            
+            if(removed > n) {
+                isPossible = false;
+                break;
             }
         }
         
-        if(removed > n) { //최소거리 X보다 더 작은 간격이 있음
-            e = X-1;
+        if(isPossible) {
+            s = k+1;
+            answer = k;
         } else {
-            answer = X;
-            s = X+1;
+            e = k-1;
         }
     }
-        
-        
     
     return answer;
 }
