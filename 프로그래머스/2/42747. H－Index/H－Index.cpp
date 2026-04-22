@@ -6,6 +6,7 @@ using namespace std;
 
 int solution(vector<int> citations) {
     int n = citations.size();
+    
     sort(citations.begin(), citations.end());
     
     int answer = 0;
