@@ -1,98 +1,89 @@
 #include <iostream>
 #include <bits/stdc++.h>
-#include <climits>
 #include <cmath>
 
 using namespace std;
 
 vector<vector<int>> parent;
-vector<int> depth;
 vector<vector<int>> graph;
+vector<int> depth;
+int N;
+int K = 1;
 
-void initialize(int N) {
-    vector<bool> isVisited(N+1, false);
+void init() {
     queue<int> q;
-    q.push(1);
-    isVisited[1] = true;
-
+    vector<bool> isVisited(N+1, false);
     int level = 1;
     int cnt = 0;
     int childCnt = 1;
+    q.push(1);
+    isVisited[1] = true;
 
     while(!q.empty()) {
         int cur = q.front();
         q.pop();
 
-        cnt++;
         depth[cur] = level;
 
         for(int child : graph[cur]) {
             if(!isVisited[child]) {
                 q.push(child);
-                parent[0][child] = cur;
                 isVisited[child] = true;
+                parent[0][child] = cur;
             }
         }
 
-        if(cnt == childCnt) {
-            level++;
+        cnt++;
+
+        if(childCnt == cnt) {
             cnt = 0;
             childCnt = q.size();
+            level++;
         }
     }
 }
 
-long long pow(int a, int b) {
-    long long x = 1;
-    for(int i=1; i<=b; i++) {
-        x *= a;
-    }
-    return x;
-}
-
-int getLCA(int a, int b, int k) {
+int getLCA(int a, int b) {
     if(depth[a] < depth[b]) {
         int temp = a;
         a = b;
         b = temp;
     }
 
-    for(int t=k; t>=0; t--) {
-        if(pow(2, t) <= abs(depth[a]-depth[b])) {
-            a = parent[t][a];
+    for(int k=K; k>=0; k--) {
+        if(pow(2, k) <= abs(depth[a] - depth[b])) {
+            a = parent[k][a];
         }
     }
 
-    for(int t=k; t>=0; t--) {
-        if(parent[t][a] != parent[t][b]) {
-            a = parent[t][a];
-            b = parent[t][b];
+    for(int k=K; k>=0; k--) {
+        if(parent[k][a] != parent[k][b]) {
+            a = parent[k][a];
+            b = parent[k][b];
         }
     }
 
-    if(a != b) {
-        a = parent[0][a];
-    }
+    if(a != b) return parent[0][a];
     return a;
 }
+
 
 int main() {
 
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int N;
     cin >> N;
 
-    depth.assign(N+1, 0);
-    graph.assign(N+1, vector<int>());
-
-    int k = 1, temp = 2;
-    while(temp <= N) {
+    int temp = 2;
+    while(temp*2 <= N) {
         temp *= 2;
-        k++;
+        K++;
     }
-    parent.assign(k+1, vector<int>(N+1, 0));
+
+    parent.assign(K+1, vector<int>(N+1, 0));
+    graph.assign(N+1, vector<int>());
+    depth.assign(N+1, 0);
 
     for(int i=0; i<N-1; i++) {
         int a, b;
@@ -101,26 +92,23 @@ int main() {
         graph[b].push_back(a);
     }
 
-    initialize(N);
+    init();
 
-    for(int t = 1; t<=k; t++) {
+    for(int k=1; k<=K; k++) {
         for(int i=1; i<=N; i++) {
-            parent[t][i] = parent[t-1][parent[t-1][i]];
+            parent[k][i] = parent[k-1][parent[k-1][i]];
         }
     }
 
     int M;
     cin >> M;
 
-    vector<int> ans;
-
     for(int i=0; i<M; i++) {
         int a, b;
         cin >> a >> b;
-        
-        cout << getLCA(a, b, k) << "\n";
+        cout << getLCA(a, b) << "\n";
     }
-
+    cout << endl;
 
     return 0;
 }
