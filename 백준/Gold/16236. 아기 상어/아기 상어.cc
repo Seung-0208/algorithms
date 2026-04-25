@@ -1,64 +1,72 @@
 #include <iostream>
 #include <bits/stdc++.h>
-#include <cmath>
+#include <climits>
 
 using namespace std;
 
+vector<vector<int>> board;
+vector<vector<int>> guide = {{1,-1,0,0}, {0,0,1,-1}};
+int N;
+int usedTime = 0;
+
 struct CMP {
-    bool operator() (pair<int, int>& a, pair<int, int>& b) {
-        if(a.first != b.first) return a.first > b.first;
-        return a.second > b.second;
+    bool operator() (pair<int, int> A, pair<int, int> B) const {
+        if(A.first != B.first) return A.first > B.first;
+        return A.second > B.second;
     }
 };
 
-vector<vector<int>> board;
-int N;
-vector<vector<int>> guide = {{1,-1,0,0}, {0,0,1,-1}};
-int ans = 0;
-
-pair<int, int> getNextPosition(int r, int c, int size) {
-    priority_queue<pair<int,int>, vector<pair<int,int>>, CMP> pq;
+pair<int, int> getNext(int size, int r, int c) {
+    priority_queue<pair<int, int>, vector<pair<int, int>>, CMP> pq;
     queue<pair<int, int>> q;
-    vector<vector<int>> dist(board.size(), vector<int>(board.size(), 0));
-    vector<vector<bool>> isVisited(board.size(), vector<bool>(board.size(), false));
-    int minDist = INT_MAX;
-    isVisited[r][c] = true;
+    vector<vector<bool>> isVisited(N, vector<bool>(N, false));
+    vector<vector<int>> dist(N, vector<int>(N, 0));
     q.push({r, c});
+    isVisited[r][c] = true;
+    int smallDist = INT_MAX;
 
     while(!q.empty()) {
         pair<int, int> curr = q.front();
         q.pop();
 
+        int cr = curr.first;
+        int cc = curr.second;
+
         for(int i=0; i<4; i++) {
-            int nr = curr.first + guide[0][i];
-            int nc = curr.second + guide[1][i];
+            int nr = cr + guide[0][i];
+            int nc = cc + guide[1][i];
 
             if(nr < 0 || nr >= N || nc < 0 || nc >= N) continue;
             if(isVisited[nr][nc]) continue;
-            
-            isVisited[nr][nc] = true;
-            dist[nr][nc] = dist[curr.first][curr.second] + 1;
 
-            //먹을 수 있는 물고기
-            if(board[nr][nc] > 0 && board[nr][nc] < size) {
-                if(minDist == dist[nr][nc]) {
-                    pq.push({nr, nc});
-                } else if(minDist > dist[nr][nc]) {
-                    pq = priority_queue<pair<int,int>, vector<pair<int,int>>, CMP>();
-                    minDist = dist[nr][nc];
-                    pq.push({nr, nc});
-                }
+            if(board[nr][nc] == size || board[nr][nc] == 0) {
+                dist[nr][nc] = dist[cr][cc] + 1;
+                q.push({nr, nc});
+                isVisited[nr][nc] = true;
             }
 
-            if(board[nr][nc] == 0 || board[nr][nc] == size) {
+            else if(board[nr][nc] < size) {
+                dist[nr][nc] = dist[cr][cc] + 1;
                 q.push({nr, nc});
+                isVisited[nr][nc] = true;
+
+                if(smallDist > dist[nr][nc]) {
+                    smallDist = dist[nr][nc];
+                    while(!pq.empty()) pq.pop();
+                }
+
+                if(smallDist == dist[nr][nc]) pq.push({nr, nc});
             }
         }
     }
 
-    if(pq.empty()) return {-1, -1};
-    ans += minDist;
-    return pq.top();
+
+    if(!pq.empty()) {
+        usedTime = smallDist;
+        return pq.top();
+    }
+    return {-1, -1};
+
 }
 
 int main() {
@@ -69,13 +77,15 @@ int main() {
     cin >> N;
 
     board.assign(N, vector<int>(N, 0));
-    int startR, startC;
+
+    int sr, sc;
+
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
             cin >> board[i][j];
             if(board[i][j] == 9) {
-                startR = i;
-                startC = j;
+                sr = i;
+                sc = j;
                 board[i][j] = 0;
             }
         }
@@ -83,20 +93,19 @@ int main() {
 
     int size = 2;
     int cnt = 0;
-
+    int ans = 0;
     while(1) {
-        pair<int, int> next = getNextPosition(startR, startC, size);
-        if(next.first == -1) {
-            break;
-        }
+        pair<int, int> next = getNext(size, sr, sc);
+        if(next.first == -1) break;
         cnt++;
+        ans += usedTime;
+        sr = next.first;
+        sc = next.second;
+        board[next.first][next.second] = 0;
         if(cnt == size) {
-            size++;
             cnt = 0;
+            size++;
         }
-        startR = next.first;
-        startC = next.second;
-        board[startR][startC] = 0;
     }
 
     cout << ans << endl;
