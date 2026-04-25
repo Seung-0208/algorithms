@@ -12,17 +12,17 @@ int main() {
 
     cin >> line1 >> line2 >> line3;
 
-    int len1 = line1.size();
-    int len2 = line2.size();
-    int len3 = line3.size();
+    int L1 = line1.size();
+    int L2 = line2.size();
+    int L3 = line3.size();
 
-    vector<vector<vector<int>>> dp(len1+1, vector<vector<int>>(len2+1, vector<int>(len3+1, 0)));
+    vector<vector<vector<int>>> dp(L1+1, vector<vector<int>>(L2+1, vector<int>(L3+1, 0)));
 
-    for(int i=1; i<=len1; i++) {
-        for(int j=1; j<=len2; j++) {
-            for(int k=1; k<=len3; k++) {
-                if(line1[i-1]==line2[j-1] && line2[j-1]==line3[k-1]) {
-                    dp[i][j][k] = dp[i-1][j-1][k-1] + 1;
+    for(int i=1; i<=L1; i++) {
+        for(int j=1; j<=L2; j++) {
+            for(int k=1; k<=L3; k++) {
+                if(line1[i-1] == line2[j-1] && line2[j-1] == line3[k-1]) {
+                    dp[i][j][k] = dp[i-1][j-1][k-1]+1;
                 } else {
                     int temp = dp[i-1][j][k];
                     if(temp < dp[i][j-1][k]) temp = dp[i][j-1][k];
@@ -32,8 +32,8 @@ int main() {
             }
         }
     }
-    
-    cout << dp[len1][len2][len3] << endl;
+
+    cout << dp[L1][L2][L3] << endl;
 
     return 0;
 }
