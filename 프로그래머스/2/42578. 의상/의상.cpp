@@ -4,21 +4,17 @@
 
 using namespace std;
 
-
-
 int solution(vector<vector<string>> clothes) {
     
-    unordered_map<string, int> clothesInfo;    
-    for(vector<string> cloth : clothes) {
-        clothesInfo[cloth[1]]++;
+    unordered_map<string, int> matching;
+    for(vector<string> item : clothes) {
+        matching[item[1]]++;
     }
+    
     int answer = 1;
-    for(auto& p : clothesInfo) {
-        p.second++;
-        answer *= p.second;
+    for(auto& p : matching) {
+        answer *= p.second+1;
     }
     
-    answer -= 1;
-    
-    return answer;
+    return answer-1;
 }
