@@ -1,42 +1,27 @@
 #include <string>
 #include <vector>
-#include <bits/stdc++.h>
 
 using namespace std;
 
-vector<vector<char>> cases;
-vector<vector<bool>> isVisited;
 int N;
-int answer = 0;
+int cnt;
 
-void DFS(int idx, vector<char>& t) {
+void tracking(int idx, int total, const int target, const vector<int>& numbers) {
     if(idx == N) {
-        cases.push_back(t);
+       if(total == target) cnt++;
         return;
     }
     
-    t[idx] = '+';
-    DFS(idx+1, t);
+    //음수를 붙였을 때
+    tracking(idx+1, total-numbers[idx], target, numbers);
     
-    t[idx] = '-';
-    DFS(idx+1, t);
+    //양수를 붙였을 때
+    tracking(idx+1, total+numbers[idx], target, numbers);
 }
 
 int solution(vector<int> numbers, int target) {
     N = numbers.size();
-    isVisited.assign(numbers.size(), vector<bool>(2, false));
-    vector<char> temp(N);
-    DFS(0, temp);
-    
-    int answer = 0;
-    for(vector<char> c : cases) {
-        int t = 0;
-        for(int i=0; i<N; i++) {
-            if(c[i] == '-') t -= numbers[i];
-            else t += numbers[i];
-        }   
-        if(t == target) answer++;
-    }
-    
+    tracking(0, 0, target, numbers);
+    int answer = cnt;
     return answer;
 }
