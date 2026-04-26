@@ -1,50 +1,59 @@
 #include <string>
 #include <vector>
-#include <bits/stdc++.h>
 
 using namespace std;
 
 int makeRepeatNumber(int N, int cnt) {
-    string temp = "";
+    string t = "";
     for(int i=0; i<cnt; i++) {
-        temp += to_string(N);
+        t += to_string(N);
     }
-    return stoi(temp);
+    return stoi(t);
 }
 
 int solution(int N, int number) {
+    vector<vector<int>> cnt(9, vector<int>());
     
-    vector<vector<long long>> cases(9, vector<long long>());
-    
-    for(int i=1; i<9; i++) {
-        int t = makeRepeatNumber(N, i);
-        if(t == number) return i;
-        cases[i].push_back(t);
+    for(int i=1; i<=8; i++) {
+        int temp = makeRepeatNumber(N, i);
+        if(temp == number) return i;
+        cnt[i].push_back(temp);
     }
     
-    for(int i=2; i<9; i++) {
-        for(int j=1; j<=i-1; j++) {
-            for(long long a : cases[j]) {
-                for(long long b : cases[i-j]) {
-                    if(a+b == number) return i;
-                    cases[i].push_back(a+b);
-                    if(a-b == number) return i;
-                    cases[i].push_back(a-b);
-                    if(b-a == number) return i;
-                    cases[i].push_back(b-a);
-                    if(a*b == number) return i;
-                    cases[i].push_back(a*b);
+    for(int i=2; i<=8; i++) {
+        for(int j=1; j<=i/2; j++) {
+            for(int a : cnt[j]) {
+                for(int b : cnt[i-j]) {
+                    int temp = a+b;
+                    if(temp == number) return i;
+                    cnt[i].push_back(temp);
+                    
+                    temp = a*b;
+                    if(temp == number) return i;
+                    cnt[i].push_back(temp);
+                    
+                    temp = a-b;
+                    if(temp == number) return i;
+                    cnt[i].push_back(temp);
+                    
+                    temp = b-a;
+                    if(temp == number) return i;
+                    cnt[i].push_back(temp);
+                    
                     if(b != 0) {
-                        if(a/b == number) return i;
-                        cases[i].push_back(a/b);
+                        temp = a/b;
+                        if(temp == number) return i;
+                        cnt[i].push_back(temp);   
                     }
+                    
                     if(a != 0) {
-                        if(b/a == number) return i;
-                        cases[i].push_back(b/a);
+                        temp = b/a;
+                        if(temp == number) return i;
+                        cnt[i].push_back(temp);   
                     }
                 }
             }
-        }    
+        }
     }
     
     return -1;
