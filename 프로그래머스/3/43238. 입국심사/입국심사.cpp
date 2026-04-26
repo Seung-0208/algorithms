@@ -1,31 +1,30 @@
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>
+#include <climits>
 
 using namespace std;
 
 long long solution(int n, vector<int> times) {
+    sort(times.begin(), times.end());
+    long long s = 0;
+    // long long e = times[times.size()-1]*n*2;
+    long long e = 9000000000000;
     
-    long long s = 0, e = 10000000000000;
-        
-    long long answer = 0;
+    long long answer = INT_MAX;
     
     while(s<=e) {
-        long long k = (s+e)/2;
-        cout << k << "\n";
-        
-        long long cnt = 0;
-        
+        long long mid = (s+e)/2;
+        long long temp = 0;
         for(int t : times) {
-            cnt += k/t;
-            if(cnt >= n) break;
+            temp += (mid/t);
         }
         
-        if(cnt >= n) {
-            answer = k;
-            e = k-1;
+        if(temp >= n) {
+            answer = mid;
+            e = mid-1;
         } else {
-            s = k+1;
+            s = mid+1;
         }
     }
     
