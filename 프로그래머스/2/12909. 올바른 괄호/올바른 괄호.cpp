@@ -6,6 +6,7 @@ using namespace std;
 
 bool solution(string s)
 {
+    
     vector<char> stack;
     
     for(int i=0; i<s.size(); i++) {
