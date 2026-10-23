@@ -4,36 +4,35 @@
 
 using namespace std;
 
-int cnt = 0;
 unordered_set<int> numberCases;
 vector<bool> isUsed;
+int cnt;
 
-bool isPrime(int number) {
-    vector<bool> prime(number+1, true);
+bool isPrime(int num) {
+    vector<bool> prime(num+1, true);
     prime[0] = false;
     prime[1] = false;
     
-    for(int i=2; i*i<=number; i++) {
+    for(int i=2; i*i <= num; i++) {
         if(!prime[i]) continue;
         
-        for(int j=i*i; j<=number; j+=i) {
+        for(int j=i*i; j<=num; j+=i) {
             prime[j] = false;
         }
     }
-    return prime[number];
+    return prime[num];
 }
 
-void DFS(string currString, int length, string numbers) {
-    if(currString.size() == length) {
-        numberCases.insert(stoi(currString));
-        cout << currString << "\n";
+void DFS(string curString, int length, string numbers) {
+    if(curString.size() == length) {
+        numberCases.insert(stoi(curString));
         return;
     }
     
     for(int i=0; i<cnt; i++) {
         if(!isUsed[i]) {
             isUsed[i] = true;
-            DFS(currString + numbers[i], length, numbers);
+            DFS(curString + numbers[i], length, numbers);
             isUsed[i] = false;
         }
     }
@@ -41,17 +40,14 @@ void DFS(string currString, int length, string numbers) {
 
 int solution(string numbers) {
     cnt = numbers.size();
-    isUsed.assign(numbers.size(), false);
+    isUsed.assign(cnt, false);
     
     for(int i=1; i<=cnt; i++) {
         DFS("", i, numbers);
     }
     int answer = 0;
-    for(int num : numberCases) {
-        if(isPrime(num)) {
-            cout << "prime num: " << num << "\n";
-            answer++;
-        }
+    for(int n : numberCases) {
+        if(isPrime(n)) answer++;
     }
     return answer;
 }
